@@ -1,3 +1,2 @@
 -c requirements.txt
 gunicorn
-uvicorn[standard]

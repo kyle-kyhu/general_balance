@@ -1,0 +1,41 @@
+{% load i18n %}
+{% load team_tags %}
+<div class="btn-group">
+  <a class="py-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    {% if team %}
+    {{ team.name }}
+    {% else %}
+    {{ request.user.get_display_name }}
+    {% endif %}
+  </a>
+  <ul class="dropdown-menu">
+    {% if team %}
+      {% if request.user|is_admin_of:team %}
+        <li>
+          <a class="dropdown-item" href="{% url 'single_team:manage_team' team.slug %}">
+            <i class="fa fa-gear"></i>
+            {% translate "Team Settings" %}
+          </a>
+        </li>
+      {% endif %}
+      {% if other_teams %}
+        <li><hr class="dropdown-divider"></li>
+        <li><span class="p-3">{% translate "Switch Team" %}</span></li>
+          {% for name, url in other_teams.items %}
+          <li>
+          <a  class="dropdown-item" href="{{ url }}"><i class="fa fa-arrow-right"></i> {{ name }}</a>
+        </li>
+        {% endfor %}
+        {% endif %}
+      {% if request.user.is_authenticated %}
+      <li><hr class="dropdown-divider"></li>
+      <li>
+        <a class="dropdown-item" href="{% url 'teams:manage_teams' %}new">
+          <i class="fa fa-plus"></i>
+          {% translate "Add Team" %}
+        </a>
+      </li>
+      {% endif %}
+      {% endif %}
+  </ul>
+</div>

@@ -4,72 +4,23 @@
 #
 #    pip-compile --config=pyproject.toml requirements/dev-requirements.in
 #
-asgiref==3.7.2
-    # via
-    #   -c requirements/requirements.txt
-    #   channels
-    #   daphne
-    #   django
-attrs==23.2.0
-    # via
-    #   -c requirements/requirements.txt
-    #   automat
-    #   service-identity
-    #   twisted
-autobahn==23.6.2
-    # via daphne
-automat==22.10.0
-    # via twisted
 black==24.1.1
     # via -r requirements/dev-requirements.in
 build==1.0.3
     # via pip-tools
-cffi==1.16.0
-    # via
-    #   -c requirements/requirements.txt
-    #   cryptography
 cfgv==3.4.0
     # via pre-commit
-channels[daphne]==4.0.0
-    # via
-    #   -c requirements/requirements.txt
-    #   -r requirements/dev-requirements.in
 click==8.1.7
     # via
     #   -c requirements/requirements.txt
     #   black
     #   pip-tools
-constantly==23.10.4
-    # via twisted
-cryptography==42.0.1
-    # via
-    #   -c requirements/requirements.txt
-    #   autobahn
-    #   pyopenssl
-    #   service-identity
-daphne==4.0.0
-    # via channels
 distlib==0.3.8
     # via virtualenv
-django==5.0.1
-    # via
-    #   -c requirements/requirements.txt
-    #   channels
 filelock==3.13.1
     # via virtualenv
-hyperlink==21.0.0
-    # via
-    #   autobahn
-    #   twisted
 identify==2.5.33
     # via pre-commit
-idna==3.6
-    # via
-    #   -c requirements/requirements.txt
-    #   hyperlink
-    #   twisted
-incremental==22.10.0
-    # via twisted
 isort==5.13.2
     # via -r requirements/dev-requirements.in
 mypy-extensions==1.0.0
@@ -78,7 +29,6 @@ nodeenv==1.8.0
     # via pre-commit
 packaging==23.2
     # via
-    #   -c requirements/requirements.txt
     #   black
     #   build
 pathspec==0.12.1
@@ -91,48 +41,16 @@ platformdirs==4.1.0
     #   virtualenv
 pre-commit==3.6.0
     # via -r requirements/dev-requirements.in
-pyasn1==0.5.1
-    # via
-    #   pyasn1-modules
-    #   service-identity
-pyasn1-modules==0.3.0
-    # via service-identity
-pycparser==2.21
-    # via
-    #   -c requirements/requirements.txt
-    #   cffi
-pyopenssl==24.0.0
-    # via twisted
 pyproject-hooks==1.0.0
     # via build
 pyyaml==6.0.1
     # via
     #   -c requirements/requirements.txt
     #   pre-commit
-service-identity==24.1.0
-    # via twisted
-six==1.16.0
-    # via
-    #   -c requirements/requirements.txt
-    #   automat
-sqlparse==0.4.4
-    # via
-    #   -c requirements/requirements.txt
-    #   django
-twisted[tls]==23.10.0
-    # via daphne
-txaio==23.1.1
-    # via autobahn
-typing-extensions==4.9.0
-    # via
-    #   -c requirements/requirements.txt
-    #   twisted
 virtualenv==20.25.0
     # via pre-commit
 wheel==0.42.0
     # via pip-tools
-zope-interface==6.1
-    # via twisted
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

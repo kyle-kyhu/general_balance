@@ -13,12 +13,6 @@
         {% if project_settings.ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE %}
           {% render_text_input form.password2 %}
         {% endif %}
-        {% if invitation %}
-          <input type="hidden" name="invitation_id" value="{{ invitation.id }}">
-          {{ form.invitation_id.errors }}
-        {% else %}
-          {% render_text_input form.team_name %}
-        {% endif %}
         {% render_field form.terms_agreement %}
         <input class="btn btn-primary w-100" type="submit" value="Sign Up">
       </form>

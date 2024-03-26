@@ -71,22 +71,6 @@ Or with celery beat (for scheduled tasks):
 celery -A general_balance worker -l INFO -B
 ```
 
-## Updating translations
-
-**Docker:**
-
-```bash
-make translations
-```
-
-**Native:**
-
-```bash
-./manage.py makemessages --all --ignore node_modules --ignore venv
-./manage.py makemessages -d djangojs --all --ignore node_modules --ignore venv
-./manage.py compilemessages
-```
-
 ## Installing Git commit hooks
 
 To install the Git commit hooks run the following:

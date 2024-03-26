@@ -1,5 +1,5 @@
 import {getApiConfiguration} from "../api";
-import {PegasusApi} from "../api-client";
+import {PegasusApi} from "api-client";
 
 export { Charts } from './examples/charts';
 

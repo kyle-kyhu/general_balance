@@ -12,9 +12,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.api.helpers import get_user_from_request
-from apps.api.permissions import IsAuthenticatedOrHasUserAPIKey
-
 from .forms import EmployeeForm
 from .models import Employee
 from .serializers import AggregateEmployeeDataSerializer, EmployeeSerializer
@@ -191,11 +188,9 @@ class ChartsView(TemplateView):
 
 
 class EmployeeDataAPIView(APIView):
-    permission_classes = (IsAuthenticatedOrHasUserAPIKey,)
-
     @extend_schema(operation_id="employees_aggregate_data", responses={200: AggregateEmployeeDataSerializer})
     def get(self, request):
-        user = get_user_from_request(request)
+        user = request.user
         data = user.employees.values("department").annotate(
             average_salary=Avg("salary"),
             total_cost=Sum("salary"),

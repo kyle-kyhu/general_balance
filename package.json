@@ -35,6 +35,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "alpinejs": "^3.13.5",
+    "api-client": "file:./api-client",
     "bootstrap": "^5.3.2",
     "chart.js": "^4.4.1",
     "htmx.org": "^1.9.10",

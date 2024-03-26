@@ -24,14 +24,3 @@ def absolute_url(relative_url: str, is_secure: bool = settings.USE_HTTPS_IN_ABSO
     Returns the complete absolute url for a given path - for use in emails or API integrations.
     """
     return f"{get_server_root(is_secure)}{relative_url}"
-
-
-websocket_reverse = partial(reverse, urlconf="general_balance.channels_urls")
-
-
-def websocket_absolute_url(relative_url: str, is_secure: bool = settings.USE_HTTPS_IN_ABSOLUTE_URLS):
-    """
-    Returns the complete absolute url for a given path - for use in emails or API integrations.
-    """
-    http_url = absolute_url(relative_url, is_secure)
-    return "ws" + http_url[4:]

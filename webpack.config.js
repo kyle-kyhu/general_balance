@@ -9,9 +9,6 @@ module.exports = {
     'site-bootstrap': './assets/site-bootstrap.js',  // required for bootstrap styles
     site: './assets/javascript/site.js',  // global site javascript
     app: './assets/javascript/app.js',  // logged-in javascript
-    teams: './assets/javascript/teams/teams.js',
-    'edit-team': './assets/javascript/teams/edit-team.js',
-    chat: './assets/javascript/chat/chat.js',
     pegasus: './assets/javascript/pegasus/pegasus.js',
     'react-object-lifecycle': './assets/javascript/pegasus/examples/react/react-object-lifecycle.js',
     'vue-object-lifecycle': './assets/javascript/pegasus/examples/vue/vue-object-lifecycle.js',
@@ -33,7 +30,16 @@ module.exports = {
       {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              '@babel/preset-env',
+              "@babel/preset-react",
+              '@babel/preset-typescript'
+            ]
+          }
+        }
       },
       {
         test: /\.scss$/,

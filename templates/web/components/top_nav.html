@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load wagtailcore_tags %}
 <nav class="navbar navbar-light navbar-expand-md bg-white shadow-sm" >
   <div class="container">
     <a class="navbar-brand {% if request.path == '/' %}active{% endif %}" href="{% url 'web:home' %}">
@@ -10,12 +9,6 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
-        {% slugurl 'blog' as blog_url %}
-        <li class="nav-item">
-          <a class="nav-link {% if blog_url in request.path %}active{% endif %}" href="{{ blog_url }}">
-            {% translate "Blog" %}
-          </a>
-        </li>
         {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link {% if '/pegasus/' in request.path %}active{% endif %}" href="{% url 'pegasus_examples:examples_home' %}">

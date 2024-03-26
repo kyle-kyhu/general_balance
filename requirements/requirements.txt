@@ -6,25 +6,12 @@
 #
 amqp==5.2.0
     # via kombu
-annotated-types==0.6.0
-    # via pydantic
-anyascii==0.3.2
-    # via wagtail
-anyio==4.2.0
-    # via
-    #   httpx
-    #   openai
 asgiref==3.7.2
-    # via
-    #   channels
-    #   channels-redis
-    #   django
+    # via django
 attrs==23.2.0
     # via
     #   jsonschema
     #   referencing
-beautifulsoup4==4.11.2
-    # via wagtail
 billiard==4.2.0
     # via celery
 boto3==1.34.30
@@ -38,18 +25,9 @@ celery[redis]==5.3.6
 celery-progress==0.3
     # via -r requirements/requirements.in
 certifi==2023.11.17
-    # via
-    #   httpcore
-    #   httpx
-    #   requests
+    # via requests
 cffi==1.16.0
     # via cryptography
-channels==4.0.0
-    # via
-    #   -r requirements/requirements.in
-    #   channels-redis
-channels-redis==4.2.0
-    # via -r requirements/requirements.in
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
@@ -69,30 +47,19 @@ cryptography==42.0.1
     #   django-anymail
     #   pyjwt
 defusedxml==0.7.1
-    # via
-    #   python3-openid
-    #   willow
-distro==1.9.0
-    # via openai
-django==5.0.1
+    # via python3-openid
+django==5.0.3
     # via
     #   -r requirements/requirements.in
-    #   channels
     #   django-allauth
     #   django-allauth-2fa
     #   django-anymail
-    #   django-filter
     #   django-hijack
-    #   django-modelcluster
     #   django-otp
-    #   django-permissionedforms
     #   django-storages
-    #   django-taggit
-    #   django-treebeard
     #   django-waffle
     #   djangorestframework
     #   drf-spectacular
-    #   wagtail
 django-allauth==0.60.1
     # via
     #   -r requirements/requirements.in
@@ -103,52 +70,22 @@ django-anymail[mailgun]==10.2
     # via -r requirements/requirements.in
 django-environ==0.11.2
     # via -r requirements/requirements.in
-django-filter==23.5
-    # via wagtail
 django-hijack==3.4.5
     # via -r requirements/requirements.in
-django-modelcluster==6.2.1
-    # via wagtail
 django-otp==1.3.0
     # via django-allauth-2fa
-django-permissionedforms==0.1
-    # via wagtail
 django-storages==1.14.2
     # via -r requirements/requirements.in
-django-taggit==4.0.0
-    # via wagtail
-django-treebeard==4.7
-    # via wagtail
 django-waffle==4.1.0
     # via -r requirements/requirements.in
 djangorestframework==3.14.0
     # via
     #   -r requirements/requirements.in
     #   drf-spectacular
-    #   wagtail
-djangorestframework-api-key==3.0.0
-    # via -r requirements/requirements.in
-draftjs-exporter==2.1.7
-    # via wagtail
 drf-spectacular==0.27.1
     # via -r requirements/requirements.in
-et-xmlfile==1.1.0
-    # via openpyxl
-filetype==1.2.0
-    # via willow
-h11==0.14.0
-    # via httpcore
-html5lib==1.1
-    # via wagtail
-httpcore==1.0.2
-    # via httpx
-httpx==0.26.0
-    # via openai
 idna==3.6
-    # via
-    #   anyio
-    #   httpx
-    #   requests
+    # via requests
 inflection==0.5.1
     # via drf-spectacular
 jmespath==1.0.1
@@ -161,36 +98,14 @@ jsonschema-specifications==2023.12.1
     # via jsonschema
 kombu==5.3.5
     # via celery
-l18n==2021.3
-    # via wagtail
-markdown==3.5.2
-    # via -r requirements/requirements.in
-msgpack==1.0.7
-    # via channels-redis
 oauthlib==3.2.2
     # via requests-oauthlib
-openai==1.10.0
-    # via -r requirements/requirements.in
-openpyxl==3.1.2
-    # via wagtail
-packaging==23.2
-    # via djangorestframework-api-key
-pillow==10.2.0
-    # via
-    #   pillow-heif
-    #   wagtail
-pillow-heif==0.14.0
-    # via willow
 prompt-toolkit==3.0.43
     # via click-repl
 psycopg2-binary==2.9.9
     # via -r requirements/requirements.in
 pycparser==2.21
     # via cffi
-pydantic==2.6.0
-    # via openai
-pydantic-core==2.16.1
-    # via pydantic
 pyjwt[crypto]==2.8.0
     # via django-allauth
 pypng==0.20220715.0
@@ -202,18 +117,13 @@ python-dateutil==2.8.2
 python3-openid==3.2.0
     # via django-allauth
 pytz==2023.4
-    # via
-    #   django-modelcluster
-    #   djangorestframework
-    #   l18n
+    # via djangorestframework
 pyyaml==6.0.1
     # via drf-spectacular
 qrcode==7.4.2
     # via django-allauth-2fa
 redis==5.0.1
-    # via
-    #   celery
-    #   channels-redis
+    # via celery
 referencing==0.33.0
     # via
     #   jsonschema
@@ -223,7 +133,6 @@ requests==2.31.0
     #   django-allauth
     #   django-anymail
     #   requests-oauthlib
-    #   wagtail
 requests-oauthlib==1.3.1
     # via django-allauth
 rpds-py==0.17.1
@@ -233,29 +142,11 @@ rpds-py==0.17.1
 s3transfer==0.10.0
     # via boto3
 six==1.16.0
-    # via
-    #   html5lib
-    #   l18n
-    #   python-dateutil
-sniffio==1.3.0
-    # via
-    #   anyio
-    #   httpx
-    #   openai
-soupsieve==2.5
-    # via beautifulsoup4
+    # via python-dateutil
 sqlparse==0.4.4
     # via django
-telepath==0.3.1
-    # via wagtail
-tqdm==4.66.1
-    # via openai
 typing-extensions==4.9.0
-    # via
-    #   openai
-    #   pydantic
-    #   pydantic-core
-    #   qrcode
+    # via qrcode
 tzdata==2023.4
     # via celery
 uritemplate==4.1.1
@@ -270,11 +161,5 @@ vine==5.1.0
     #   amqp
     #   celery
     #   kombu
-wagtail==5.2.3
-    # via -r requirements/requirements.in
 wcwidth==0.2.13
     # via prompt-toolkit
-webencodings==0.5.1
-    # via html5lib
-willow[heif]==1.6.3
-    # via wagtail
