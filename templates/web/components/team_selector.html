@@ -30,7 +30,7 @@
       {% if request.user.is_authenticated %}
       <li><hr class="dropdown-divider"></li>
       <li>
-        <a class="dropdown-item" href="{% url 'teams:manage_teams' %}new">
+        <a class="dropdown-item" href="{% url 'teams:create_team' %}">
           <i class="fa fa-plus"></i>
           {% translate "Add Team" %}
         </a>

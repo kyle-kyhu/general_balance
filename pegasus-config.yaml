@@ -1,5 +1,5 @@
 default_context:
-  _pegasus_version: '2024.3'
+  _pegasus_version: '2024.4'
   author_name: Kyle
   ci: none
   css_framework: bootstrap
@@ -13,7 +13,7 @@ default_context:
   enable_github_login: n
   enable_google_login: n
   enable_twitter_login: n
-  front_end_framework: react
+  front_end_framework: htmx
   include_static_files: y
   marketing_email_platform: none
   post_process: y
