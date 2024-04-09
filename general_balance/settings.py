@@ -24,7 +24,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default="qFvDhzxZifKGjuHhMEJrcHGykuRYTCRPBtZcoght")
+SECRET_KEY = env("SECRET_KEY", default="kVejzpzBmgFhUTBdzXPhfBDIwDPbblbsNkLsqyrf")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
@@ -52,36 +52,16 @@ THIRD_PARTY_APPS = [
     "allauth",  # allauth account/registration management
     "allauth.account",
     "allauth.socialaccount",
-    "channels",
     "django_otp",
     "django_otp.plugins.otp_totp",
     "django_otp.plugins.otp_static",
     "allauth_2fa",
     "rest_framework",
     "drf_spectacular",
-    "rest_framework_api_key",
     "celery_progress",
     "hijack",  # "login as" functionality
     "hijack.contrib.admin",  # hijack buttons in the admin
     "waffle",
-]
-
-WAGTAIL_APPS = [
-    "wagtail.contrib.forms",
-    "wagtail.contrib.redirects",
-    "wagtail.contrib.simple_translation",
-    "wagtail.embeds",
-    "wagtail.sites",
-    "wagtail.users",
-    "wagtail.snippets",
-    "wagtail.documents",
-    "wagtail.images",
-    "wagtail.locales",
-    "wagtail.search",
-    "wagtail.admin",
-    "wagtail",
-    "modelcluster",
-    "taggit",
 ]
 
 PEGASUS_APPS = [
@@ -91,23 +71,12 @@ PEGASUS_APPS = [
 
 # Put your project-specific apps here
 PROJECT_APPS = [
-    "apps.content",
-    "apps.group_chat",
     "apps.users.apps.UserConfig",
     "apps.dashboard.apps.DashboardConfig",
-    "apps.api.apps.APIConfig",
-    "apps.chat",
-    "apps.openai_example",
     "apps.web",
-    "apps.teams.apps.TeamConfig",
-    "apps.teams_example.apps.TeamsExampleConfig",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS + WAGTAIL_APPS
-
-if DEBUG:
-    # in debug mode, add daphne to the beginning of INSTALLED_APPS to enable async support
-    INSTALLED_APPS.insert(0, "daphne")
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -118,12 +87,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django_otp.middleware.OTPMiddleware",
-    "apps.teams.middleware.TeamsMiddleware",
-    "apps.web.locale_middleware.UserLocaleMiddleware",
-    "apps.web.locale_middleware.UserTimezoneMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "hijack.middleware.HijackUserMiddleware",
     "waffle.middleware.WaffleMiddleware",
 ]
@@ -155,7 +120,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.web.context_processors.project_meta",
-                "apps.teams.context_processors.team",
                 # this line can be removed if not using google analytics
                 "apps.web.context_processors.google_analytics_id",
             ],
@@ -213,7 +177,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Allauth setup
 
-ACCOUNT_ADAPTER = "apps.teams.adapter.AcceptInvitationAdapter"
+ACCOUNT_ADAPTER = "apps.users.adapter.AccountAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
@@ -226,7 +190,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 ACCOUNT_FORMS = {
-    "signup": "apps.teams.forms.TeamSignupForm",
+    "signup": "apps.users.forms.TermsSignupForm",
 }
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
@@ -246,16 +210,10 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/stable/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-LANGUAGE_COOKIE_NAME = "general_balance_language"
-LANGUAGES = WAGTAIL_CONTENT_LANGUAGES = [
-    ("en", gettext_lazy("English")),
-    ("fr", gettext_lazy("French")),
-]
-LOCALE_PATHS = (BASE_DIR / "locale",)
 
 TIME_ZONE = "UTC"
 
-USE_I18N = WAGTAIL_I18N_ENABLED = True
+USE_I18N = False
 
 USE_TZ = True
 
@@ -324,11 +282,16 @@ SITE_ID = 1
 
 # DRF config
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("apps.api.permissions.IsAuthenticatedOrHasUserAPIKey",),
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 100,
 }
+
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "General Balance",
@@ -338,17 +301,6 @@ SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_SETTINGS": {
         "displayOperationId": True,
     },
-    "PREPROCESSING_HOOKS": [
-        "apps.api.schema.filter_schema_apis",
-    ],
-    "APPEND_COMPONENTS": {
-        "securitySchemes": {"ApiKeyAuth": {"type": "apiKey", "in": "header", "name": "Authorization"}}
-    },
-    "SECURITY": [
-        {
-            "ApiKeyAuth": [],
-        }
-    ],
 }
 
 # Celery setup (using redis)
@@ -366,26 +318,6 @@ if REDIS_URL.startswith("rediss"):
 
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 
-# Channels / Daphne setup
-
-ASGI_APPLICATION = "general_balance.asgi.application"
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [REDIS_URL],
-        },
-    },
-}
-
-# Wagtail config
-
-WAGTAIL_SITE_NAME = "General Balance Content"
-WAGTAILADMIN_BASE_URL = "http://generalbalance.com"
-
-# Waffle config
-
-WAFFLE_FLAG_MODEL = "teams.Flag"
 
 # Pegasus config
 
@@ -406,12 +338,6 @@ ADMINS = [("Kyle", "kylehunt22@gmail.com")]
 
 # Add your google analytics ID to the environment to connect to Google Analytics
 GOOGLE_ANALYTICS_ID = env("GOOGLE_ANALYTICS_ID", default="")
-
-
-# OpenAI setup
-
-OPENAI_API_KEY = env("OPENAI_API_KEY", default="")
-OPENAI_MODEL = env("OPENAI_MODEL", default="gpt-3.5-turbo")
 
 
 LOGGING = {

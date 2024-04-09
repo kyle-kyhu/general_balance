@@ -45,11 +45,10 @@
     {% endif %}
     <script src="{% static 'js/site-bundle.js'%}"></script>
     <script type="text/javascript">__cssFramework = 'bootstrap';</script>
-    <script src="{% url 'javascript-catalog' %}"></script>
     {% block page_head %}
     {% endblock %}
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body_wrapper %}
 {% block top_nav %}
   {% include 'web/components/top_nav.html' %}

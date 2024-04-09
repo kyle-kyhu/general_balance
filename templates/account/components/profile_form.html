@@ -21,21 +21,6 @@
       {% render_text_input form.email %}
       {% render_text_input form.first_name %}
       {% render_text_input form.last_name %}
-      {% if form.fields.language.choices %}
-        {% render_select_input form.language %}
-      {% endif %}
-      {% render_select_input form.timezone %}
-      <div class="pg-help">
-        {% if user.timezone %}
-          {% blocktranslate with  user_tz=user.timezone %}
-            Your current timezone is {{ user_tz }}, where it is {{ now }}.
-          {% endblocktranslate %}
-        {% else %}
-          {% blocktranslate %}
-            You have not set a timezone, and are using the system timezone of {{ current_tz }} where it is {{ now }}.
-          {% endblocktranslate %}
-        {% endif %}
-      </div>
       <div class="mt-2">
         <input class="pg-button-primary" type="submit" value="{% translate "Save" %}">
       </div>

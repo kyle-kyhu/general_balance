@@ -1,6 +1,4 @@
 boto3
-channels
-channels_redis
 Django
 django-allauth
 django-allauth-2fa
@@ -8,7 +6,6 @@ django-waffle
 psycopg2-binary
 django-environ
 djangorestframework
-djangorestframework-api-key
 drf-spectacular
 django-anymail[mailgun]  # email services
 django-hijack
@@ -16,6 +13,3 @@ django-storages
 celery-progress
 celery
 celery[redis]
-markdown
-openai
-wagtail

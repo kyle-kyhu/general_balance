@@ -13,7 +13,6 @@ media/
 docs/_build
 _dist/
 .env
-.env.docker
 .env.production
 .DS_Store
 .direnv

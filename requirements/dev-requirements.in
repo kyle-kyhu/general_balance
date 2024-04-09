@@ -1,5 +1,4 @@
 -c requirements.txt
-channels[daphne]
 pip-tools
 pre-commit
 black
