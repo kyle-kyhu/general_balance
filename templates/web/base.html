@@ -36,7 +36,7 @@
 {% endblock meta %}
 {% include 'web/components/favicon.html' %}
     <link rel="stylesheet" href="{% static 'css/site-base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/site-bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site-tailwind.css' %}">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/v4-shims.min.css" integrity="sha512-ARfx5eajdcCAuWvuJrgUuJ6D25ON3KZRTCghNXXKeJldCQJ5bXS+6CvG2EhcFWITF95uwZydzpufSKvhmSpTxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -44,7 +44,7 @@
         {% include 'web/components/google_analytics.html' %}
     {% endif %}
     <script src="{% static 'js/site-bundle.js'%}"></script>
-    <script type="text/javascript">__cssFramework = 'bootstrap';</script>
+    <script type="text/javascript">__cssFramework = 'tailwind';</script>
     {% block page_head %}
     {% endblock %}
 </head>
@@ -63,7 +63,6 @@
 {% endblock footer %}
 {% endblock body_wrapper %}
   {% include 'web/components/messages-js.html' %}
-  <script src="{% static 'js/site-bootstrap-bundle.js' %}"></script>
 {% block page_js %}
 {% endblock page_js %}
 </body>

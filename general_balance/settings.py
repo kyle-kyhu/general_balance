@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/stable/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -24,7 +25,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default="kVejzpzBmgFhUTBdzXPhfBDIwDPbblbsNkLsqyrf")
+SECRET_KEY = env("SECRET_KEY", default="FmWKRTHTmBxgFydStksGzOXErpYQiwCVPNvphOlB")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
@@ -295,7 +296,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "General Balance",
-    "DESCRIPTION": "excel automation made simple",
+    "DESCRIPTION": "customized accounting automation",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
@@ -317,6 +318,15 @@ if REDIS_URL.startswith("rediss"):
     REDIS_URL = f"{REDIS_URL}?ssl_cert_reqs=none"
 
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_BEAT_SCHEDULE = {
+    "test-celerybeat": {
+        "task": "pegasus.apps.examples.tasks.example_log_task",
+        "schedule": timedelta(minutes=1),
+        "options": {
+            "expires": 60,  # cancel this task after a minute if it hasn't started
+        },
+    },
+}
 
 
 # Pegasus config
@@ -325,7 +335,7 @@ CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 PROJECT_METADATA = {
     "NAME": gettext_lazy("General Balance"),
     "URL": "http://generalbalance.com",
-    "DESCRIPTION": gettext_lazy("excel automation made simple"),
+    "DESCRIPTION": gettext_lazy("customized accounting automation"),
     "IMAGE": "https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg",
     "KEYWORDS": "SaaS, django",
     "CONTACT_EMAIL": "kylehunt22@gmail.com",

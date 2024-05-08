@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * General Balance
- * excel automation made simple
+ * customized accounting automation
  *
  * The version of the OpenAPI document: 0.1.0
  * 

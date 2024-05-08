@@ -1,12 +1,13 @@
 default_context:
-  _pegasus_version: '2024.4'
+  _pegasus_version: 2024.4.2
+  ai_chat_mode: none
   author_name: Kyle
   ci: none
-  css_framework: bootstrap
+  css_framework: tailwind
   css_theme: default
   database: postgres
   deploy_platform: none
-  description: excel automation made simple
+  description: customized accounting automation
   docker_setup: default
   domain_name: generalbalance.com
   email: kylehunt22@gmail.com
@@ -34,7 +35,6 @@ default_context:
   use_ecommerce_example: n
   use_examples: y
   use_impersonation: y
-  use_openai: n
   use_sentry: n
   use_subscriptions: n
   use_teams: n
