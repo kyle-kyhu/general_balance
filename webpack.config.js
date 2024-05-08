@@ -6,7 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
   entry: {
     'site-base': './assets/site-base.js',  // base styles shared between frameworks
-    'site-bootstrap': './assets/site-bootstrap.js',  // required for bootstrap styles
+    'site-tailwind': './assets/site-tailwind.js',  // required for tailwindcss styles
     site: './assets/javascript/site.js',  // global site javascript
     app: './assets/javascript/app.js',  // logged-in javascript
     pegasus: './assets/javascript/pegasus/pegasus.js',
@@ -47,6 +47,14 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader'
         ],
       },
     ],

@@ -31,7 +31,7 @@ USE_HTTPS_IN_ABSOLUTE_URLS = True
 
 # Your email config goes here.
 # see https://github.com/anymail/django-anymail for more details / examples
-# To use mailgun, comment out the lines below and make sure your key and domain
+# To use mailgun, uncomment the lines below and make sure your key and domain
 # are available in the environment.
 # EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 

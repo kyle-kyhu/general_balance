@@ -1,6 +1,6 @@
 # General Balance
 
-excel automation made simple
+customized accounting automation
 
 ## Installation
 
