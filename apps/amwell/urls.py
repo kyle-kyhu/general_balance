@@ -6,7 +6,7 @@ app_name = "amwell"
 
 urlpatterns = [
     path("", AmwellListView.as_view(), name="list"),
-    path("bankrec/", BankRecView.as_view(), name="bank_rec"),
-    path("bankrec/script/", BankRecScriptView.as_view(), name="bank_rec_script"),
-    path("bankrec/download/", BankRecDownloadView.as_view(), name="bank_rec_download"),
+    path("bank_rec/", BankRecView.as_view(), name="bank_rec"),
+    path("bank_rec/script/", BankRecScriptView.as_view(), name="bank_rec_script"),
+    path("bank_rec/download/", BankRecDownloadView.as_view(), name="bank_rec_download"),
 ]

@@ -15,5 +15,7 @@ class BankRecAdmin(admin.ModelAdmin):
         'excel_file_uploaded_at',
           'python_script_success',
           )
+    
+
 
 admin.site.register(BankRec, BankRecAdmin)

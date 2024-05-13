@@ -28,7 +28,7 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-6">
-                    {{ csv_form }}  <!-- Form for uploading CSV files -->
+                    {{ form }}  <!-- Form for uploading CSV files -->
                 </div>
                 <div class="mb-6">
                     {{ excel_form }}  <!-- Form for uploading Excel files -->
@@ -39,7 +39,7 @@
             <!-- Show the Run Python Script button only if the files have been saved successfully -->
             {% if file and show_run_script %}
             <div class="mt-8">
-                <form method="post" action="{% url 'bankrec:bank_rec_script' %}">
+                <form method="post" action="{% url 'amwell:bank_rec_script' %}">
                     {% csrf_token %}
                     <button class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded" type="submit">Run Python Script</button>
                 </form>
@@ -48,6 +48,7 @@
 
             <!-- If script executed, show download link in a separate card -->
             {% if file and script_executed %}
+            <p>Download</p>
             <div class="bg-gray-700 rounded-lg p-4 shadow mt-10">
                 <h4 class="text-lg font-bold mb-2">Download</h4>
                 <a href="{% url 'bankrec:bank_rec_download' %}" class="text-blue-400">{{ file.excel.name }}</a>
