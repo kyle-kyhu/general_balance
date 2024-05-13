@@ -1,0 +1,60 @@
+{% extends "pegasus/examples/examples_base.html" %}
+{% load static %}
+
+<head>
+        <title>Bank Rec</title>
+</head>
+ 
+{% block app %}
+
+<!-- Display messages -->
+{% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div class="{% if message.tags %}alert {{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Upload CSV file -->
+<div class="max-w-3xl mx-auto bg-gray-600 rounded-xl shadow-lg overflow-hidden mt-6">
+    <div class="md:flex">
+        <div class="p-8 text-white">
+            <h2 class="text-2xl font-bold mb-6">Bank Reconciliation</h2>
+
+            <!-- Form for file upload -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-6">
+                    {{ csv_form }}  <!-- Form for uploading CSV files -->
+                </div>
+                <div class="mb-6">
+                    {{ excel_form }}  <!-- Form for uploading Excel files -->
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded" type="submit">Save</button>
+            </form>
+
+            <!-- Show the Run Python Script button only if the files have been saved successfully -->
+            {% if file and show_run_script %}
+            <div class="mt-8">
+                <form method="post" action="{% url 'bankrec:bank_rec_script' %}">
+                    {% csrf_token %}
+                    <button class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded" type="submit">Run Python Script</button>
+                </form>
+            </div>
+            {% endif %}
+
+            <!-- If script executed, show download link in a separate card -->
+            {% if file and script_executed %}
+            <div class="bg-gray-700 rounded-lg p-4 shadow mt-10">
+                <h4 class="text-lg font-bold mb-2">Download</h4>
+                <a href="{% url 'bankrec:bank_rec_download' %}" class="text-blue-400">{{ file.excel.name }}</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
