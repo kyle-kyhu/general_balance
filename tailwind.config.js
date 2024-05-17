@@ -35,4 +35,9 @@ module.exports = {
     require('@tailwindcss/typography'),
     require("daisyui"),
   ],
+// KH - added line below to enable daisyui
+  daisyui: {
+    themes: ["business", "forest", "luxury"],
+
+  },
 }

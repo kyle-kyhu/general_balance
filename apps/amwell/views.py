@@ -23,10 +23,7 @@ class AmwellListView(ListView):
         return context
 
     def get_queryset(self):
-        csv_file = BankRec.objects.all()
-        excel_file = BankRec.objects.all()
-        return {'csv_file': csv_file, 'excel_file': excel_file}
-
+        return BankRec.objects.all()  
 
 class BankRecView(FormView):
     template_name = "amwell/bank_rec.html"
