@@ -67,10 +67,12 @@ class BankRecView(FormView):
     def form_invalid(self, form, excel_form):
         return self.render_to_response(self.get_context_data(form=form, excel_form=excel_form))
 
-# per chatgpt
+
 class BankRecScriptView(View):
     def post(self, request, *args, **kwargs):
-        file_instance = BankRec.objects.filter(csv_file__isnull=False, excel_file__isnull=False).last()
+        file_instance = BankRec.objects.filter(
+            csv_file__isnull=False, 
+            excel_file__isnull=False).last()
 
         if not file_instance:
             messages.error(request, "No files uploaded.")
@@ -91,12 +93,17 @@ class BankRecScriptView(View):
 
         try:
             env = os.environ.copy()
-            env['DJANGO_SETTINGS_MODULE'] = 'your_project.settings'
+            env['DJANGO_SETTINGS_MODULE'] = 'general_balance.settings'
 
             # Print the Python script being run
             print("Running Python script:", script_path)
 
-            result = subprocess.run(['python', script_path, csv_file_path, excel_file_path], check=True, env=env, capture_output=True, text=True)
+            result = subprocess.run(['python', script_path, csv_file_path, excel_file_path], 
+                                    check=True, 
+                                    env=env, 
+                                    capture_output=True, 
+                                    text=True,
+                                    )
             
             print("Subprocess STDOUT:", result.stdout)
             print("Subprocess STDERR:", result.stderr)

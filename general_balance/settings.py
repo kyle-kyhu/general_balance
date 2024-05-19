@@ -76,6 +76,7 @@ PROJECT_APPS = [
     "apps.dashboard.apps.DashboardConfig",
     "apps.web",
     "apps.amwell.apps.AmwellConfig",
+    "apps.demo.apps.DemoConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS

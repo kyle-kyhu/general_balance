@@ -33,6 +33,7 @@ urlpatterns = [
     path("admin/login/", RedirectView.as_view(pattern_name="account_login")),
     path("admin/", admin.site.urls),
     path("amwell/", include("apps.amwell.urls")), # KH - added this line
+    path("demo/", include("apps.demo.urls")), # KH - added this line
     path("dashboard/", include("apps.dashboard.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("accounts/", include("allauth_2fa.urls")),
