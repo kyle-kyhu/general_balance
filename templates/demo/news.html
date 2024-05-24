@@ -1,0 +1,16 @@
+{% extends "pegasus/examples/examples_base.html" %}
+{% load static %}
+{% block app %}
+
+<h1>Top News</h1>
+
+{% if top_story %}
+    <h2>{{ top_story.title }}</h2>
+    <p>{{ top_story.abstract }}</p>
+    <a href="{{ top_story.url }}">Read more</a>
+{% else %}
+    <p>No top story found.</p>
+{% endif %}
+
+
+{% endblock %}

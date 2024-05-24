@@ -2,16 +2,6 @@
 {% load static %}
 {% block app %}
 
-<!-- Display messages -->
-{% if messages %}
-    <div class="mb-6">
-        {% for message in messages %}
-        <div class="{% if message.tags %}alert {{ message.tags }}{% endif %}">
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-{% endif %}
 
 <!-- Upload CSV file -->
 <div class="max-w-3xl mx-auto bg-gray-600 rounded-xl shadow-lg overflow-hidden mt-6">
@@ -28,7 +18,7 @@
                 <div class="mb-6">
                     {{ excel_form }}  <!-- Form for uploading Excel files -->
                 </div>
-                <button class="" type="submit">Save</button>
+                <button class="pg-button-primary" type="submit">Save</button>
             </form>
 
             <!-- Show the Run Python Script button only if the files have been saved successfully -->

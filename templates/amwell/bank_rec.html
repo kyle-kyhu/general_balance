@@ -8,17 +8,6 @@
  
 {% block app %}
 
-<!-- Display messages -->
-{% if messages %}
-    <div class="mb-6">
-        {% for message in messages %}
-        <div class="{% if message.tags %}alert {{ message.tags }}{% endif %}">
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
 <!-- Upload CSV file -->
 <div class="max-w-3xl mx-auto bg-gray-600 rounded-xl shadow-lg overflow-hidden mt-6">
     <div class="md:flex">

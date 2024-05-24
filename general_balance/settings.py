@@ -337,7 +337,7 @@ CELERY_BEAT_SCHEDULE = {
 PROJECT_METADATA = {
     "NAME": gettext_lazy("General Balance"),
     "URL": "http://generalbalance.com",
-    "DESCRIPTION": gettext_lazy("Automate the boring stuff"),
+    "DESCRIPTION": gettext_lazy("Automation Consulting for Accounting"),
     "IMAGE": "https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg",
     "KEYWORDS": "SaaS, django",
     "CONTACT_EMAIL": "kylehunt22@gmail.com",

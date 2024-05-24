@@ -3,8 +3,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import ListView, View, FormView
+from django.views.generic import ListView, View, FormView, TemplateView
 from django.shortcuts import redirect
+import requests
 import os
 import subprocess
 import glob
@@ -134,3 +135,32 @@ class CsvDownloadView(View):
         else:
             messages.error(request, 'No updated excel file found')
         return redirect('demo:demo_csv')
+    
+
+# weather api
+
+class NewsView(TemplateView):
+    template_name = "demo/news.html"
+
+    def get_top_story(self):
+        api_key = os.getenv('NYTIMES_API_KEY')  # see .env.example file
+        url = f"https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key={api_key}"
+        response = requests.get(url)
+        data = response.json()
+
+        if data and 'results' in data and len(data['results']) > 0:
+            return data['results'][0]  # Return the top viewed story
+        else:
+            return None
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['top_story'] = self.get_top_story()
+        return context
+
+
+
+# streamlit view
+class StreamlitView(View):
+    pass
+    
