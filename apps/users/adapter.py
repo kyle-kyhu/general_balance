@@ -1,7 +1,7 @@
 from allauth.account import app_settings
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.account.utils import user_email, user_field
-from allauth_2fa.adapter import OTPAdapter as AllAuthOtpAdapter
+from allauth.mfa.models import Authenticator
 
 
 class EmailAsUsernameAdapter(DefaultAccountAdapter):
@@ -24,5 +24,7 @@ class NoNewUsersAccountAdapter(DefaultAccountAdapter):
         return False
 
 
-class AccountAdapter(EmailAsUsernameAdapter, AllAuthOtpAdapter):
-    pass
+def user_has_valid_totp_device(user) -> bool:
+    if not user.is_authenticated:
+        return False
+    return user.authenticator_set.filter(type=Authenticator.Type.TOTP).exists()

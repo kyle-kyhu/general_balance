@@ -27,13 +27,14 @@
   <div id="crud-home"></div>
 {% endblock %}
 {% block page_js %}
-  <script src="{% static 'js/pegasus-bundle.js' %}"></script>
+  <script src="{% static 'js/pegasus-bundle.js' %}" defer></script>
   <script>
-    const objectUrl = '{% url "pegasus_employees:react_object_lifecycle" %}';
-    const Charts = SiteJS.pegasus.Charts;
-    const client = SiteJS.pegasus.getPegasusApiClient("{{ server_url }}");
-
     document.addEventListener('DOMContentLoaded', () => {
+
+      const objectUrl = '{% url "pegasus_employees:react_object_lifecycle" %}';
+      const Charts = SiteJS.pegasus.Charts;
+      const client = SiteJS.pegasus.getPegasusApiClient("{{ server_url }}");
+
       client.employeesAggregateData().then(function (result) {
         if (result.headcounts.length === 0) {
           let noData = '<p class="pg-text-centered">No data! First <a href="' + objectUrl + '">create some employees</a>.</p>';

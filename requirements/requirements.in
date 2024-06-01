@@ -1,7 +1,7 @@
 boto3
 Django
-django-allauth
-django-allauth-2fa
+django-allauth[socialaccount,mfa]
+django-otp  # this is required for the allauth two-factor migration, but can be removed after that
 django-waffle
 psycopg2-binary
 django-environ
@@ -13,3 +13,4 @@ django-storages
 celery-progress
 celery
 celery[redis]
+whitenoise[brotli]

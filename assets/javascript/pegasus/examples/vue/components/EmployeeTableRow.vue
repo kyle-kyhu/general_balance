@@ -8,7 +8,7 @@
         <span class="pg-icon"><i class="fa fa-edit" /></span>
         <span class="pg-hidden-mobile-inline">Edit</span>
       </a>
-      <a class="pg-button-danger pg-ml" v-on:click="deleteEmployee">
+      <a class="pg-button-danger" v-on:click="deleteEmployee">
         <span class="pg-icon"><i class="fa fa-times" /></span>
         <span class="pg-hidden-mobile-inline">Delete</span>
       </a>

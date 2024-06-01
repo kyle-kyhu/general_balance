@@ -18,11 +18,13 @@
             <input class="btn btn-primary btn-block" type="submit" value="{% translate "Sign In" %}">
           </div>
         </form>
-        <div class="text-sm mt-4">
-          <a href="{% url 'account_reset_password' %}" class="font-medium text-blue-700 hover:text-blue-500">
-            {% translate "Forgot password?" %}
+        {% if LOGIN_BY_CODE_ENABLED %}
+        <p class="pg-text-centered pg-text-muted">
+          <a class="text-sm muted-link" href="{{ request_login_code_url }}">
+            {% translate "Mail me a sign-in code" %}
           </a>
-        </div>
+        </p>
+        {% endif %}
       </div>
     </div>
   </div>

@@ -22,9 +22,9 @@
       <span>Save</span>
     </button>
     {% if employee %}
-      <button class="pg-button-secondary pg-ml" hx-get="{% url 'pegasus_employees:htmx_get_employee' employee.id %}">Cancel</button>
+      <button class="pg-button-secondary" hx-get="{% url 'pegasus_employees:htmx_get_employee' employee.id %}">Cancel</button>
     {% else %}
-      <button class="pg-button-secondary pg-ml" hx-get="{% url 'pegasus_employees:htmx_empty' %}">Cancel</button>
+      <button class="pg-button-secondary" hx-get="{% url 'pegasus_employees:htmx_empty' %}">Cancel</button>
     {% endif %}
     </div>
   </div>
