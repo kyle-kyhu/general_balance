@@ -19,7 +19,7 @@ const EmployeeTableRow = function (props) {
             </div>
           </Link>
           <a onClick={() => props.delete(props.index)}>
-            <div className="pg-button-danger pg-ml">
+            <div className="pg-button-danger">
               <span className="pg-icon"><i className="fa fa-times" /></span>
               <span className="pg-hidden-mobile-inline">Delete</span>
             </div>

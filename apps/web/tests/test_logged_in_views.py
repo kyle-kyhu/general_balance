@@ -11,4 +11,4 @@ class TestProfileViews(TestLoginRequiredViewBase):
         self._run_tests(reverse("account_change_password"))
 
     def test_2fa_setup(self):
-        self._run_tests(reverse("two-factor-setup"))
+        self._run_tests(reverse("mfa_index"))

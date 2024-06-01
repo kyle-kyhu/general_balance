@@ -1,12 +1,13 @@
 default_context:
-  _pegasus_version: 2024.4.2
+  _pegasus_version: 2024.5.3
   ai_chat_mode: none
+  ai_image_mode: none
   author_name: Kyle
   ci: none
   css_framework: tailwind
   css_theme: default
   database: postgres
-  deploy_platform: none
+  deploy_platform: render
   description: customized accounting automation
   docker_setup: default
   domain_name: generalbalance.com
@@ -34,6 +35,7 @@ default_context:
   use_docker: n
   use_ecommerce_example: n
   use_examples: y
+  use_health_checks: n
   use_impersonation: y
   use_sentry: n
   use_subscriptions: n

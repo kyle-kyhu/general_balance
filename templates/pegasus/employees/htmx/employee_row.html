@@ -7,7 +7,7 @@
       <span class="pg-icon"><i class="fa fa-edit"></i></span>
       <span class="pg-hidden-mobile-inline">Edit</span>
     </div>
-    <button class="pg-button-danger pg-ml" type="submit" hx-delete="{% url 'pegasus_employees:htmx_delete_employee' employee.id %}">
+    <button class="pg-button-danger" type="submit" hx-delete="{% url 'pegasus_employees:htmx_delete_employee' employee.id %}">
       <span class="pg-icon"><i class="fa fa-times"></i></span>
       <span class="pg-hidden-mobile-inline">Delete</span>
     </button>

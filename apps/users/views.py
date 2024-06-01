@@ -1,7 +1,6 @@
 import json
 
 from allauth.account.utils import send_email_confirmation
-from allauth_2fa.utils import user_has_valid_totp_device
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
@@ -9,6 +8,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
+from .adapter import user_has_valid_totp_device
 from .forms import CustomUserChangeForm, UploadAvatarForm
 from .helpers import require_email_confirmation, user_has_confirmed_email_address
 from .models import CustomUser

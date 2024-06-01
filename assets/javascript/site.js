@@ -3,4 +3,4 @@
 import 'htmx.org';
 import './htmx';
 import './mock-i18n';
-import './alpine'
+import './alpine';

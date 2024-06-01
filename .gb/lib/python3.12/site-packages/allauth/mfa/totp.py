@@ -7,6 +7,7 @@ import time
 from io import BytesIO
 from urllib.parse import quote
 
+from django.core.cache import cache
 from django.utils.http import urlencode
 
 import qrcode
@@ -83,7 +84,13 @@ def format_hotp_value(value):
     return f"{value:0{app_settings.TOTP_DIGITS}}"
 
 
+def _is_insecure_bypass(code):
+    return code and app_settings.TOTP_INSECURE_BYPASS_CODE == code
+
+
 def validate_totp_code(secret, code):
+    if _is_insecure_bypass(code):
+        return True
     value = hotp_value(secret, hotp_counter_from_time())
     return code == format_hotp_value(value)
 
@@ -104,5 +111,22 @@ class TOTP:
         self.instance.delete()
 
     def validate_code(self, code):
+        if _is_insecure_bypass(code):
+            return True
+        if self._is_code_used(code):
+            return False
+
         secret = decrypt(self.instance.data["secret"])
-        return validate_totp_code(secret, code)
+        valid = validate_totp_code(secret, code)
+        if valid:
+            self._mark_code_used(code)
+        return valid
+
+    def _get_used_cache_key(self, code):
+        return f"allauth.mfa.totp.used?user={self.instance.user_id}&code={code}"
+
+    def _is_code_used(self, code):
+        return cache.get(self._get_used_cache_key(code)) == "y"
+
+    def _mark_code_used(self, code):
+        cache.set(self._get_used_cache_key(code), "y", timeout=app_settings.TOTP_PERIOD)

@@ -43,41 +43,41 @@
 </section>
 {% endblock %}
 {% block page_js %}
-    <script src="{% static 'celery_progress/celery_progress.js' %}"></script>
-    <script src="{% static 'js/app-bundle.js' %}"></script>
+    <script src="{% static 'celery_progress/celery_progress.js' %}" defer></script>
+    <script src="{% static 'js/app-bundle.js' %}" defer></script>
     <script>
-    const App = SiteJS.app;
     const apiUrl = "{% url 'pegasus_examples:tasks_api' %}";
     const progressUrl = "{% url 'celery_progress:task_status' 'task-id-stub' %}";
     document.addEventListener("DOMContentLoaded", function () {
-        var trigger = document.getElementById('task-starter');
-        trigger.addEventListener('click', function (e) {
-            e.preventDefault();
-            var pb = document.getElementById('progress-bar');
-            pb.style.display = 'inherit';
-            fetch(apiUrl, {
-                method: 'post',
-                credentials: 'same-origin',
-                headers: {
-                  'X-CSRFToken': App.Cookies.get('csrftoken'),
-                }
-            }).then(
-                function (response) {
-                    return response.text();
-                }).then(function (text) {
-                    var taskUrl = progressUrl.replace('task-id-stub', text);
-                    CeleryProgressBar.initProgressBar(taskUrl, {
-                        onProgress: function (progressBarElement, progressBarMessageElement, progress) {
-                            progressBarElement.style.width = progress.percent + "%";
-                            progressBarMessageElement.innerHTML = progress.current + ' of ' + progress.total + ' processed.';
-                        },
-                    });
-                  })
-                  .catch(function (error) {
-                    console.error('Request failed', error);
-                });
-                e.preventDefault();
-        }, false);
+      const App = SiteJS.app;
+      var trigger = document.getElementById('task-starter');
+      trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          var pb = document.getElementById('progress-bar');
+          pb.style.display = 'inherit';
+          fetch(apiUrl, {
+              method: 'post',
+              credentials: 'same-origin',
+              headers: {
+                'X-CSRFToken': App.Cookies.get('csrftoken'),
+              }
+          }).then(
+              function (response) {
+                  return response.text();
+              }).then(function (text) {
+                  var taskUrl = progressUrl.replace('task-id-stub', text);
+                  CeleryProgressBar.initProgressBar(taskUrl, {
+                      onProgress: function (progressBarElement, progressBarMessageElement, progress) {
+                          progressBarElement.style.width = progress.percent + "%";
+                          progressBarMessageElement.innerHTML = progress.current + ' of ' + progress.total + ' processed.';
+                      },
+                  });
+                })
+                .catch(function (error) {
+                  console.error('Request failed', error);
+              });
+              e.preventDefault();
+      }, false);
     });
     </script>
 {% endblock %}

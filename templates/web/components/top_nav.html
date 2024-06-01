@@ -20,7 +20,8 @@
   </div>
   <div class="navbar-center hidden lg:flex">
     <div class="menu menu-horizontal p-0">
-      <a class="tab {% if request.path == '/' %}tab-active{% endif %}" href="{% url 'web:home' %}">
+      <!-- original location of project name -->
+      <a class="tab {% if request.path == '/' %}tab-active{% endif %} text-xl" href="{% url 'web:home' %}">
         <div>{{project_meta.NAME}}</div>
       </a>
     </div>

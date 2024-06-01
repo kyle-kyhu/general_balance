@@ -25,7 +25,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default="FmWKRTHTmBxgFydStksGzOXErpYQiwCVPNvphOlB")
+SECRET_KEY = env("SECRET_KEY", default="MBNisxntAIUzGRtFKKxDLobHpRPmQtfNdCamNCQK")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
@@ -56,12 +56,13 @@ THIRD_PARTY_APPS = [
     "django_otp",
     "django_otp.plugins.otp_totp",
     "django_otp.plugins.otp_static",
-    "allauth_2fa",
+    "allauth.mfa",
     "rest_framework",
     "drf_spectacular",
     "celery_progress",
     "hijack",  # "login as" functionality
     "hijack.contrib.admin",  # hijack buttons in the admin
+    "whitenoise.runserver_nostatic",  # whitenoise runserver
     "waffle",
 ]
 
@@ -83,13 +84,13 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "hijack.middleware.HijackUserMiddleware",
@@ -180,7 +181,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Allauth setup
 
-ACCOUNT_ADAPTER = "apps.users.adapter.AccountAdapter"
+ACCOUNT_ADAPTER = "apps.users.adapter.EmailAsUsernameAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
@@ -191,6 +192,7 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
 ACCOUNT_FORMS = {
     "signup": "apps.users.forms.TermsSignupForm",
@@ -199,8 +201,6 @@ ACCOUNT_FORMS = {
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
 # or "optional" to send confirmation emails but not require them
 ACCOUNT_EMAIL_VERIFICATION = env("ACCOUNT_EMAIL_VERIFICATION", default="none")
-
-ALLAUTH_2FA_ALWAYS_REVEAL_BACKUP_TOKENS = False
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -238,8 +238,8 @@ STORAGES = {
     "staticfiles": {
         # swap these to use manifest storage to bust cache when files change
         # note: this may break image references in sass/css files which is why it is not enabled by default
-        # "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
