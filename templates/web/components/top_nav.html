@@ -20,18 +20,18 @@
   </div>
   <div class="navbar-center hidden lg:flex">
     <div class="menu menu-horizontal p-0">
-      <!-- original location of project name -->
-      <a class="tab {% if request.path == '/' %}tab-active{% endif %} text-xl" href="{% url 'web:home' %}">
+      <!-- original location of project name in the nav bar -->
+      <!-- <a class="tab {% if request.path == '/' %}tab-active{% endif %} text-xl" href="{% url 'web:home' %}">
         <div>{{project_meta.NAME}}</div>
-      </a>
+      </a> -->
     </div>
   </div>
   <div class="navbar-end">
     {% if user.is_authenticated %}
       <div class="menu menu-horizontal p-0">
-        <a class="tab {% if '/pegasus' in request.path %}tab-active{% endif %}" href="{% url 'pegasus_examples:examples_home' %}">
+        <!-- <a class="tab {% if '/pegasus' in request.path %}tab-active{% endif %}" href="{% url 'pegasus_examples:examples_home' %}">
           {% translate "Examples Gallery" %}
-        </a>
+        </a> -->
       </div>
     {% else %}
     <a href="{% url 'account_signup' %}" class="btn btn-primary">

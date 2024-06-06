@@ -49,3 +49,5 @@ DEFAULT_FROM_EMAIL = "kylehunt22@gmail.com"
 ADMINS = [
     ("Your Name", "kylehunt22@gmail.com"),
 ]
+
+ALLOWED_HOSTS = ['generalbalance.com']

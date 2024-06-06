@@ -50,6 +50,9 @@ services:
         sync: false
       - key: GOOGLE_ANALYTICS_ID
         sync: false
+      # KH added
+      
+
 
 # Celery task worker (not available on 'free' plan)
 #  - type: worker
