@@ -50,4 +50,7 @@ ADMINS = [
     ("Your Name", "kylehunt22@gmail.com"),
 ]
 
-ALLOWED_HOSTS = ['generalbalance.com']
+ALLOWED_HOSTS = [
+    'generalbalance.com',
+    'www.generalbalance.com',
+    ]
