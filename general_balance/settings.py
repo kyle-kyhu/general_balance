@@ -14,7 +14,7 @@ from pathlib import Path
 
 import environ
 from django.utils.translation import gettext_lazy
-import dj_database_url
+#import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -141,14 +141,15 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
-# DATABASES = {"default": env.db()},
+
 if "DATABASE_URL" in env:
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    DATABASES = {"default": env.db()},
+    # DATABASES = {
+    #     'default': dj_database_url.config(
+    #         conn_max_age=600,
+    #         conn_health_checks=True,
+    #     )
+    # }
     
 else:
     DATABASES = {
