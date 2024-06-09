@@ -14,6 +14,7 @@ from pathlib import Path
 
 import environ
 from django.utils.translation import gettext_lazy
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -141,7 +142,10 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
 if "DATABASE_URL" in env:
-    DATABASES = {"default": env.db()}
+    # DATABASES = {"default": env.db()}
+    DATABASES = {"default": dj_database_url.config(
+        default='postgres://postgres:***@localhost:5432/general_balance',
+    )}
 else:
     DATABASES = {
         "default": {
