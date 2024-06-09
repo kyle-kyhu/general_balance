@@ -141,11 +141,14 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
+# DATABASES = {"default": env.db()},
 if "DATABASE_URL" in env:
-    # DATABASES = {"default": env.db()}
-    DATABASES = {"default": dj_database_url.config(
-        default='postgres://postgres:***@localhost:5432/general_balance',
-    )}
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600
+        )
+    }
+    
 else:
     DATABASES = {
         "default": {
