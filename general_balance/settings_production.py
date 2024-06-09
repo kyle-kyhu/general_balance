@@ -53,4 +53,5 @@ ADMINS = [
 ALLOWED_HOSTS = [
     'generalbalance.com',
     'www.generalbalance.com',
+    'general-balance.onrender.com',
     ]
