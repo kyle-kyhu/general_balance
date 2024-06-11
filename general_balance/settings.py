@@ -143,7 +143,7 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 
 if "DATABASE_URL" in env:
-    DATABASES = {"default": env.db()},
+    DATABASES = {"default": env.db()}
     # DATABASES = {
     #     'default': dj_database_url.config(
     #         conn_max_age=600,
