@@ -18,26 +18,24 @@
       </ul>
     </div>
   </div>
-  <div class="navbar-center hidden lg:flex">
-    <div class="menu menu-horizontal p-0">
-      <a class="tab {% if request.path == '/' %}tab-active{% endif %}" href="{% url 'web:home' %}">
-        <div>{{project_meta.NAME}}</div>
-      </a>
-      <a class="" href="{% url 'amwell:list' %}">
-        <div>Dashboard</div>
-      </a>
-      <a class="" href="{% url 'amwell:list' %}">
-        <div>New Request</div>
-      </a>
-    </div>
-  </div>
-  <div class="navbar-end">
+<!-- nav bar -->
+  <div class="navbar-center menu-title text-lg">
     {% if user.is_authenticated %}
       <!-- <div class="menu menu-horizontal p-0">
         <a class="tab {% if '/pegasus' in request.path %}tab-active{% endif %}" href="{% url 'pegasus_examples:examples_home' %}">
           {% translate "Examples Gallery" %}
-        </a>
-      </div> -->
+        </a> -->
+      <div>
+      <a class="tab {% if request.path == '/' %}tab-active{% endif %}" href="{% url 'web:home' %}">
+        <div>{{project_meta.NAME}}</div>
+      </a>
+      <!-- <a class="" href="{% url 'amwell:list' %}">
+        <div>Dashboard</div>
+      </a>
+      <a class="" href="{% url 'amwell:list' %}">
+        <div>New Request</div>
+      </a> -->
+    </div>
     {% else %}
     <a href="{% url 'account_signup' %}" class="btn btn-primary">
       {% translate "Sign Up" %}
