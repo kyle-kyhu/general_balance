@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 from .adapter import user_has_valid_totp_device
 from .forms import CustomUserChangeForm, UploadAvatarForm
 from .helpers import require_email_confirmation, user_has_confirmed_email_address
-from .models import CustomUser, Company
+from .models import CustomUser
 
 
 @login_required
@@ -36,8 +36,7 @@ def profile(request):
                 form = CustomUserChangeForm(instance=user)
             user.save()
             messages.success(request, _("Profile successfully saved."))
-            if 'company' in form.changed_date:
-                messages.success(request, _("Company successfully saved."))
+ 
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(

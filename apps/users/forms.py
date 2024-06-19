@@ -8,16 +8,15 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext
 
 from .helpers import validate_profile_picture
-from .models import CustomUser, Company
+from .models import CustomUser
 
 
 class CustomUserChangeForm(UserChangeForm):
     email = forms.EmailField(label=gettext("Email"), required=True)
-    company = forms.ModelChoiceField(queryset=Company.objects.all(), required=False)
 
     class Meta:
         model = CustomUser
-        fields = ("email", "first_name", "last_name", "company")
+        fields = ("email", "first_name", "last_name", )
 
 
 class UploadAvatarForm(forms.Form):

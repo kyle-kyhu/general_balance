@@ -8,17 +8,19 @@
             <img class="img-fluid" src="{% static 'images/web/rocket-laptop.svg' %}" alt="{% translate "Fly Away!" %}">
         </div>
         <div class="pg-column">
-            <h1 class="pg-title">{% translate "Welcome to General Balance" %}</h1>
+            <h1 class="pg-title">{% translate "Welcome to" %} {{ company.name }}</h1>  <!-- Display the company's name -->
             <h2 class="pg-subtitle">
                 {% translate "Where we automate the boring stuff." %}
             </h2>
             <div class="pg-content">
                 <!-- How do you autheticate users? -->
                  {% if user.is_authenticated %}
-                    <p>{% translate "You are logged in as" %} {{ user.username }}</p>
-                <p>
-                    <a href = "{% url 'amwell:list' %}">{% translate "Click here to get Amwell's automations" %}</a>
-                </p>
+                    <p>{% translate "You are logged in as" %} {{ user.username }} at {{ company.name }}</p>
+                <!-- this is company amwell dashboard -->
+                    <p><a href = "{% url 'amwell:list' %}">{% translate "Click here to get Amwell's automations" %}</a></p>
+                <!-- this is company1 dashboard -->
+
+
                 {% else %}
                     <p>{% translate "You are not logged in" %}</p>
                     <p>
