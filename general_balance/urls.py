@@ -13,20 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import include, path
+from django.urls import path, include
 from django.views.generic import RedirectView
-from django.views.i18n import JavaScriptCatalog
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+from apps.teams.urls import team_urlpatterns as single_team_urls
+from apps.web.urls import team_urlpatterns as web_team_urls
 from apps.web.sitemaps import StaticViewSitemap
 
 sitemaps = {
     "static": StaticViewSitemap(),
 }
+
+# urls that are unique to using a team should go here
+team_urlpatterns = [
+    path("", include(web_team_urls)),
+    path("team/", include(single_team_urls)),
+    path("example/", include("apps.teams_example.urls")),
+]
 
 urlpatterns = [
     # redirect Django admin login to main login page
@@ -34,11 +43,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("dashboard/", include("apps.dashboard.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
+    path("a/<slug:team_slug>/", include(team_urlpatterns)),
     path("accounts/", include("allauth.urls")),
     path("users/", include("apps.users.urls")),
+    path("teams/", include("apps.teams.urls")),
     path("", include("apps.web.urls")),
-    path("pegasus/", include("pegasus.apps.examples.urls")),
-    path("pegasus/employees/", include("pegasus.apps.employees.urls")),
     path("support/", include("apps.support.urls")),
     path("celery-progress/", include("celery_progress.urls")),
     # API docs

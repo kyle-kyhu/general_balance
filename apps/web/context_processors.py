@@ -1,7 +1,5 @@
 from copy import copy
-
 from django.conf import settings
-
 from .meta import absolute_url, get_server_root
 
 
@@ -21,6 +19,7 @@ def project_meta(request):
         "project_settings": {
             "ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE": settings.ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE,
         },
+        "turnstile_key": getattr(settings, "TURNSTILE_KEY", None),
     }
 
 

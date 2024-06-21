@@ -1,6 +1,5 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -9,9 +8,6 @@ module.exports = {
     'site-tailwind': './assets/site-tailwind.js',  // required for tailwindcss styles
     site: './assets/javascript/site.js',  // global site javascript
     app: './assets/javascript/app.js',  // logged-in javascript
-    pegasus: './assets/javascript/pegasus/pegasus.js',
-    'react-object-lifecycle': './assets/javascript/pegasus/examples/react/react-object-lifecycle.js',
-    'vue-object-lifecycle': './assets/javascript/pegasus/examples/vue/vue-object-lifecycle.js',
   },
   output: {
     path: path.resolve(__dirname, './static'),
@@ -24,10 +20,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      },
-      {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
@@ -35,7 +27,6 @@ module.exports = {
           options: {
             presets: [
               '@babel/preset-env',
-              "@babel/preset-react",
               '@babel/preset-typescript'
             ]
           }
@@ -63,7 +54,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       'filename': 'css/[name].css',
     }),
-    new VueLoaderPlugin(),
   ],
   optimization: {
     minimizer: [new TerserPlugin({

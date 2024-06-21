@@ -2,9 +2,8 @@ from allauth.account.signals import email_confirmed, user_signed_up
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.core.mail import mail_admins
-from django.db.models.signals import post_delete, pre_save
+from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
-
 from apps.users.models import CustomUser
 
 

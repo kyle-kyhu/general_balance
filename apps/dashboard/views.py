@@ -27,7 +27,7 @@ def dashboard(request):
     if end_str:
         end = _string_to_date(end_str)
     else:
-        end = timezone.now().date()
+        end = timezone.now().date() + timedelta(days=1)
     start_str = request.GET.get("start")
     if start_str:
         start = _string_to_date(start_str)

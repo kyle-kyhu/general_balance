@@ -6,7 +6,7 @@
 #
 amqp==5.2.0
     # via kombu
-asgiref==3.7.2
+asgiref==3.8.1
     # via django
 attrs==23.2.0
     # via
@@ -14,19 +14,21 @@ attrs==23.2.0
     #   referencing
 billiard==4.2.0
     # via celery
-boto3==1.34.30
+boto3==1.34.117
     # via -r requirements/requirements.in
-botocore==1.34.30
+botocore==1.34.117
     # via
     #   boto3
     #   s3transfer
 brotli==1.1.0
     # via whitenoise
-celery[redis]==5.3.6
-    # via -r requirements/requirements.in
+celery[redis]==5.4.0
+    # via
+    #   -r requirements/requirements.in
+    #   django-celery-beat
 celery-progress==0.3
     # via -r requirements/requirements.in
-certifi==2023.11.17
+certifi==2024.6.2
     # via requests
 cffi==1.16.0
     # via cryptography
@@ -38,48 +40,54 @@ click==8.1.7
     #   click-didyoumean
     #   click-plugins
     #   click-repl
-click-didyoumean==0.3.0
+click-didyoumean==0.3.1
     # via celery
 click-plugins==1.1.1
     # via celery
 click-repl==0.3.0
     # via celery
-cryptography==42.0.1
-    # via
-    #   django-anymail
-    #   pyjwt
+cron-descriptor==1.4.3
+    # via django-celery-beat
+cryptography==42.0.7
+    # via pyjwt
 django==5.0.6
     # via
     #   -r requirements/requirements.in
     #   django-allauth
     #   django-anymail
+    #   django-celery-beat
     #   django-hijack
     #   django-otp
     #   django-storages
+    #   django-timezone-field
     #   django-waffle
     #   djangorestframework
     #   drf-spectacular
-django-allauth[mfa,socialaccount]==0.62.1
+django-allauth[mfa,socialaccount]==0.63.3
     # via -r requirements/requirements.in
-django-anymail[mailgun]==10.2
+django-anymail[mailgun]==10.3
+    # via -r requirements/requirements.in
+django-celery-beat==2.6.0
     # via -r requirements/requirements.in
 django-environ==0.11.2
     # via -r requirements/requirements.in
 django-hijack==3.4.5
     # via -r requirements/requirements.in
-django-otp==1.3.0
+django-otp==1.5.0
     # via -r requirements/requirements.in
-django-storages==1.14.2
+django-storages==1.14.3
     # via -r requirements/requirements.in
+django-timezone-field==6.1.0
+    # via django-celery-beat
 django-waffle==4.1.0
     # via -r requirements/requirements.in
-djangorestframework==3.14.0
+djangorestframework==3.15.1
     # via
     #   -r requirements/requirements.in
     #   drf-spectacular
-drf-spectacular==0.27.1
+drf-spectacular==0.27.2
     # via -r requirements/requirements.in
-idna==3.6
+idna==3.7
     # via requests
 inflection==0.5.1
     # via drf-spectacular
@@ -87,64 +95,67 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jsonschema==4.21.1
+jsonschema==4.22.0
     # via drf-spectacular
 jsonschema-specifications==2023.12.1
     # via jsonschema
-kombu==5.3.5
+kombu==5.3.7
     # via celery
 oauthlib==3.2.2
     # via requests-oauthlib
-prompt-toolkit==3.0.43
+prompt-toolkit==3.0.45
     # via click-repl
 psycopg2-binary==2.9.9
     # via -r requirements/requirements.in
-pycparser==2.21
+pycparser==2.22
     # via cffi
 pyjwt[crypto]==2.8.0
     # via django-allauth
 pypng==0.20220715.0
     # via qrcode
-python-dateutil==2.8.2
+python-crontab==3.1.0
+    # via django-celery-beat
+python-dateutil==2.9.0.post0
     # via
     #   botocore
     #   celery
-pytz==2023.4
-    # via djangorestframework
+    #   python-crontab
 pyyaml==6.0.1
     # via drf-spectacular
 qrcode==7.4.2
     # via django-allauth
-redis==5.0.1
+redis==5.0.4
     # via celery
-referencing==0.33.0
+referencing==0.35.1
     # via
     #   jsonschema
     #   jsonschema-specifications
-requests==2.31.0
+requests==2.32.3
     # via
     #   django-allauth
     #   django-anymail
     #   requests-oauthlib
-requests-oauthlib==1.3.1
+requests-oauthlib==2.0.0
     # via django-allauth
-rpds-py==0.17.1
+rpds-py==0.18.1
     # via
     #   jsonschema
     #   referencing
-s3transfer==0.10.0
+s3transfer==0.10.1
     # via boto3
 six==1.16.0
     # via python-dateutil
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via django
-typing-extensions==4.9.0
+typing-extensions==4.12.1
     # via qrcode
-tzdata==2023.4
-    # via celery
+tzdata==2024.1
+    # via
+    #   celery
+    #   django-celery-beat
 uritemplate==4.1.1
     # via drf-spectacular
-urllib3==2.0.7
+urllib3==2.2.1
     # via
     #   botocore
     #   django-anymail
