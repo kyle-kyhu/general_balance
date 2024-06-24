@@ -9,12 +9,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/
 """
 
 import os
-from datetime import timedelta
 from pathlib import Path
 
 import environ
 from django.utils.translation import gettext_lazy
-#import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +24,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["SECRET_KEY"]
-
+SECRET_KEY = env("SECRET_KEY", default="django-insecure-IiOfHY93ZTgG3CMd2gnzMaPmiu51x6HMZDJ91urD")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
@@ -66,11 +63,7 @@ THIRD_PARTY_APPS = [
     "hijack.contrib.admin",  # hijack buttons in the admin
     "whitenoise.runserver_nostatic",  # whitenoise runserver
     "waffle",
-]
-
-PEGASUS_APPS = [
-    "pegasus.apps.examples.apps.PegasusExamplesConfig",
-    "pegasus.apps.employees.apps.PegasusEmployeesConfig",
+    "django_celery_beat",
 ]
 
 # Put your project-specific apps here
@@ -78,11 +71,11 @@ PROJECT_APPS = [
     "apps.users.apps.UserConfig",
     "apps.dashboard.apps.DashboardConfig",
     "apps.web",
-    "apps.amwell.apps.AmwellConfig",
-    "apps.demo.apps.DemoConfig",
+    "apps.teams.apps.TeamConfig",
+    "apps.teams_example.apps.TeamsExampleConfig",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -93,6 +86,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "apps.teams.middleware.TeamsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "hijack.middleware.HijackUserMiddleware",
@@ -126,6 +120,8 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.web.context_processors.project_meta",
+                "apps.teams.context_processors.team",
+                "apps.teams.context_processors.user_teams",
                 # this line can be removed if not using google analytics
                 "apps.web.context_processors.google_analytics_id",
             ],
@@ -141,16 +137,8 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
-
 if "DATABASE_URL" in env:
     DATABASES = {"default": env.db()}
-    # DATABASES = {
-    #     'default': dj_database_url.config(
-    #         conn_max_age=600,
-    #         conn_health_checks=True,
-    #     )
-    # }
-    
 else:
     DATABASES = {
         "default": {
@@ -191,10 +179,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Allauth setup
 
-ACCOUNT_ADAPTER = "apps.users.adapter.EmailAsUsernameAdapter"
+ACCOUNT_ADAPTER = "apps.teams.adapter.AcceptInvitationAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False  # don't send "forgot password" emails to unknown accounts
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -205,7 +194,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
 ACCOUNT_FORMS = {
-    "signup": "apps.users.forms.TermsSignupForm",
+    "signup": "apps.teams.forms.TeamSignupForm",
 }
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
@@ -219,12 +208,17 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
+# For turnstile captchas
+TURNSTILE_KEY = env("TURNSTILE_KEY", default=None)
+TURNSTILE_SECRET = env("TURNSTILE_SECRET", default=None)
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/stable/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "America/New_York"
+TIME_ZONE = "UTC"
 
 USE_I18N = False
 
@@ -263,7 +257,7 @@ if USE_S3_MEDIA:
     # See https://docs.saaspegasus.com/configuration.html?#storing-media-files
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID", default="")
     AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="gb-static-0001") # was "general_balance-media"
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="general_balance-media")
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     PUBLIC_MEDIA_LOCATION = "media"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/"
@@ -278,6 +272,10 @@ if USE_S3_MEDIA:
 # migration files being generated, so we stick with AutoField for now.
 # change this to BigAutoField if you"re sure you want to use it and aren"t worried about migrations.
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+# Removes deprecation warning for future compatibility.
+# see https://adamj.eu/tech/2023/12/07/django-fix-urlfield-assume-scheme-warnings/ for details.
+FORMS_URLFIELD_ASSUME_HTTPS = True
 
 # Email setup
 
@@ -330,16 +328,11 @@ if REDIS_URL.startswith("rediss"):
     REDIS_URL = f"{REDIS_URL}?ssl_cert_reqs=none"
 
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_BEAT_SCHEDULE = {
-    "test-celerybeat": {
-        "task": "pegasus.apps.examples.tasks.example_log_task",
-        "schedule": timedelta(minutes=1),
-        "options": {
-            "expires": 60,  # cancel this task after a minute if it hasn't started
-        },
-    },
-}
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
+# Waffle config
+
+WAFFLE_FLAG_MODEL = "teams.Flag"
 
 # Pegasus config
 
@@ -347,7 +340,7 @@ CELERY_BEAT_SCHEDULE = {
 PROJECT_METADATA = {
     "NAME": gettext_lazy("General Balance"),
     "URL": "http://generalbalance.com",
-    "DESCRIPTION": gettext_lazy("Automation Consulting for Accounting"),
+    "DESCRIPTION": gettext_lazy("customized accounting automation"),
     "IMAGE": "https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg",
     "KEYWORDS": "SaaS, django",
     "CONTACT_EMAIL": "kylehunt22@gmail.com",

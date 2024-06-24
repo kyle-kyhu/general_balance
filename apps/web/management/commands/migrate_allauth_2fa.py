@@ -1,4 +1,5 @@
 """Copied from https://docs.allauth.org/en/latest/mfa/django-allauth-2fa.html"""
+
 import base64
 
 from allauth.mfa.adapter import get_adapter

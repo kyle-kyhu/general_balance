@@ -13,4 +13,5 @@ django-storages
 celery-progress
 celery
 celery[redis]
+django-celery-beat
 whitenoise[brotli]

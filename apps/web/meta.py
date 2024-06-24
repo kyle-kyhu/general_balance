@@ -1,8 +1,5 @@
-from functools import partial
-
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.urls import reverse
 
 
 def get_protocol(is_secure: bool = settings.USE_HTTPS_IN_ABSOLUTE_URLS) -> str:

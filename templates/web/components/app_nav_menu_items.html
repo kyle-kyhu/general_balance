@@ -8,6 +8,7 @@
     {% translate "Dashboard" %}
   </a>
 </li>
+{% include "web/components/team_nav.html" %}
 {% if not user.is_anonymous %}
 <li class="menu-title">
   <span>{% translate "My Account" %}</span>

@@ -8,34 +8,20 @@
             <img class="img-fluid" src="{% static 'images/web/rocket-laptop.svg' %}" alt="{% translate "Fly Away!" %}">
         </div>
         <div class="pg-column">
-            <h1 class="pg-title">{% translate "Welcome to" %} {{ company.name }}</h1>  <!-- Display the company's name -->
+            <h1 class="pg-title">{% translate "You're Signed In!" %}</h1>
             <h2 class="pg-subtitle">
-                {% translate "Where we automate the boring stuff." %}
+                {% translate "This is your application's logged in home page." %}
             </h2>
-            <div class="pg-content">
-                <!-- How do you autheticate users? -->
-                 {% if user.is_authenticated %}
-                    <p>{% translate "You are logged in as" %} {{ user.username }} at {{ company.name }}</p>
-                <!-- this is company amwell dashboard -->
-                    <p><a href = "{% url 'amwell:list' %}">{% translate "Click here to get Amwell's automations" %}</a></p>
-                <!-- this is company1 dashboard -->
-
-
-                {% else %}
-                    <p>{% translate "You are not logged in" %}</p>
-                    <p>
-                        <a href="{% url 'login' %}">{% translate "Click here to login" %}</a>
-                    </p>
-                {% endif %}
-                
-            </div>
+            <p>
+                Now go make something great!
+            </p>
         </div>
     </div>
 </section>
-<!-- <section class="app-card">
+<section class="app-card">
     <div class="pg-content">
         <p>To add more to this page you can make new sections like this one.</p>
         <p>Tip: the source of this page can be found at <code>templates/web/app_home.html</code></p>
     </div>
-</section> -->
+</section>
 {% endblock %}

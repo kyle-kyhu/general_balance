@@ -1,4 +1,5 @@
-from .settings import *
+# flake8: noqa: F405
+from .settings import *  # noqa F401
 
 # Note: it is recommended to use the "DEBUG" environment variable to override this value in your main settings.py file.
 # A future release may remove it from here.
