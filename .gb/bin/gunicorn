@@ -1,4 +1,4 @@
-#!/Users/kdh/Documents/developer/Git/general_balance/.gb/bin/python3.12
+#!/Users/kdh/Documents/developer/Git/general_balance/.gb/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
