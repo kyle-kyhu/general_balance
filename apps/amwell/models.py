@@ -10,3 +10,6 @@ class BankRec(models.Model):
 
     def __str__(self):
         return f"CSV: {self.csv_file.name}, Excel: {self.excel_file.name}"
+
+    class Meta:
+        app_label = 'amwell'
