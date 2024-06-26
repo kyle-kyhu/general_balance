@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class BankRec(models.Model):
     csv_file = models.FileField(upload_to='static/bank_rec/')
     excel_file = models.FileField(upload_to='static/bank_rec/')
