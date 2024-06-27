@@ -78,7 +78,7 @@ class BankRecScriptView(View):
             messages.error(request, "No files uploaded.")
             return redirect('amwell:bank_rec')
 
-        base_dir = os.path.join(settings.MEDIA_ROOT, 'static', 'bank_rec')  # Ensure the correct base directory
+        base_dir = os.path.join(settings.MEDIA_ROOT, 'static', 'sandbox1')  # Ensure the correct base directory
         script_path = os.path.join(base_dir, 'sandbox1.py')
         csv_file_path = os.path.join(base_dir, os.path.basename(file_instance.csv_file.name))  # Ensure full path to CSV file
         excel_file_path = os.path.join(base_dir, os.path.basename(file_instance.excel_file.name))  # Ensure full path to Excel file
