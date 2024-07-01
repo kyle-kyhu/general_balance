@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
-from django.views import View
 from django.views.generic import ListView, View, FormView
 from django.shortcuts import redirect
 import os
@@ -78,8 +77,8 @@ class BankRecScriptView(View):
             messages.error(request, "No files uploaded.")
             return redirect('amwell:bank_rec')
 
-        base_dir = os.path.join(settings.MEDIA_ROOT, 'static', 'sandbox1')  # Ensure the correct base directory
-        script_path = os.path.join(base_dir, 'sandbox1.py')
+        base_dir = os.path.join(settings.MEDIA_ROOT, 'static', 'amwell_bank_rec')  # Ensure the correct base directory
+        script_path = os.path.join(base_dir, 'amwell_bank_rec.py')
         csv_file_path = os.path.join(base_dir, os.path.basename(file_instance.csv_file.name))  # Ensure full path to CSV file
         excel_file_path = os.path.join(base_dir, os.path.basename(file_instance.excel_file.name))  # Ensure full path to Excel file
 
