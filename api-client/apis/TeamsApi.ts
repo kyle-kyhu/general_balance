@@ -39,7 +39,7 @@ import {
 
 export interface InvitationsCreateRequest {
     teamSlug: string;
-    invitation: Omit<Invitation, 'id'|'invited_by'>;
+    invitation: Invitation;
 }
 
 export interface InvitationsDestroyRequest {
@@ -55,7 +55,7 @@ export interface InvitationsListRequest {
 export interface InvitationsPartialUpdateRequest {
     id: string;
     teamSlug: string;
-    patchedInvitation?: Omit<PatchedInvitation, 'id'|'invited_by'>;
+    patchedInvitation?: PatchedInvitation;
 }
 
 export interface InvitationsRetrieveRequest {
@@ -66,11 +66,11 @@ export interface InvitationsRetrieveRequest {
 export interface InvitationsUpdateRequest {
     id: string;
     teamSlug: string;
-    invitation: Omit<Invitation, 'id'|'invited_by'>;
+    invitation: Invitation;
 }
 
 export interface TeamsCreateRequest {
-    team: Omit<Team, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'>;
+    team: Team;
 }
 
 export interface TeamsDestroyRequest {
@@ -83,7 +83,7 @@ export interface TeamsListRequest {
 
 export interface TeamsPartialUpdateRequest {
     id: number;
-    patchedTeam?: Omit<PatchedTeam, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'>;
+    patchedTeam?: PatchedTeam;
 }
 
 export interface TeamsRetrieveRequest {
@@ -92,7 +92,7 @@ export interface TeamsRetrieveRequest {
 
 export interface TeamsUpdateRequest {
     id: number;
-    team: Omit<Team, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'>;
+    team: Team;
 }
 
 /**

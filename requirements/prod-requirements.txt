@@ -4,7 +4,7 @@
 #
 #    pip-compile --config=pyproject.toml requirements/prod-requirements.in
 #
-gunicorn==22.0.0
+gunicorn==23.0.0
     # via -r requirements/prod-requirements.in
-packaging==24.0
+packaging==24.1
     # via gunicorn

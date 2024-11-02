@@ -90,7 +90,7 @@ export function PatchedInvitationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInvitationToJSON(value?: Omit<PatchedInvitation, 'id'|'invited_by'> | null): any {
+export function PatchedInvitationToJSON(value?: PatchedInvitation | null): any {
     if (value == null) {
         return value;
     }

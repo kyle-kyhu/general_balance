@@ -8,7 +8,7 @@ def team(request):
 
 
 def user_teams(request):
-    if not request.user.is_authenticated:
+    if not hasattr(request, "user") or not request.user.is_authenticated:
         return {}
 
     try:

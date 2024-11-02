@@ -1,4 +1,6 @@
 .idea
+.vscode
+*.code-workspace
 *.pyc
 *~
 db.sqlite3

@@ -103,7 +103,7 @@ export function PatchedTeamFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedTeamToJSON(value?: Omit<PatchedTeam, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'> | null): any {
+export function PatchedTeamToJSON(value?: PatchedTeam | null): any {
     if (value == null) {
         return value;
     }

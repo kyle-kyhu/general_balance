@@ -94,7 +94,7 @@ export function InvitationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InvitationToJSON(value?: Omit<Invitation, 'id'|'invited_by'> | null): any {
+export function InvitationToJSON(value?: Invitation | null): any {
     if (value == null) {
         return value;
     }

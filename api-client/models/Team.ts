@@ -109,7 +109,7 @@ export function TeamFromJSONTyped(json: any, ignoreDiscriminator: boolean): Team
     };
 }
 
-export function TeamToJSON(value?: Omit<Team, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'> | null): any {
+export function TeamToJSON(value?: Team | null): any {
     if (value == null) {
         return value;
     }

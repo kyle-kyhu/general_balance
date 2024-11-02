@@ -25,10 +25,6 @@ export const RoleEnum = {
 export type RoleEnum = typeof RoleEnum[keyof typeof RoleEnum];
 
 
-export function instanceOfRoleEnum(value: any): boolean {
-    return Object.values(RoleEnum).includes(value);
-}
-
 export function RoleEnumFromJSON(json: any): RoleEnum {
     return RoleEnumFromJSONTyped(json, false);
 }

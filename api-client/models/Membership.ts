@@ -96,7 +96,7 @@ export function MembershipFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function MembershipToJSON(value?: Omit<Membership, 'id'|'user_id'|'first_name'|'last_name'|'display_name'> | null): any {
+export function MembershipToJSON(value?: Membership | null): any {
     if (value == null) {
         return value;
     }

@@ -5,7 +5,7 @@ from allauth.account.forms import SignupForm
 from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserChangeForm
-from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 from .helpers import validate_profile_picture
 from .models import CustomUser
@@ -40,7 +40,7 @@ class TurnstileSignupForm(SignupForm):
 
 
 class CustomUserChangeForm(UserChangeForm):
-    email = forms.EmailField(label=gettext("Email"), required=True)
+    email = forms.EmailField(label=_("Email"), required=True)
 
     class Meta:
         model = CustomUser

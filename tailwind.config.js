@@ -1,4 +1,8 @@
 module.exports = {
+  daisyui: {
+    themes: ["light", "dark"],
+  },
+  darkMode: ["class", '[data-theme="dark"]'],
   content: [
     './apps/**/*.html',
     './assets/**/*.js',
@@ -22,7 +26,6 @@ module.exports = {
     },
     container: {
       center: true,
-      // padding: '2rem',
     },
   },
   variants: {

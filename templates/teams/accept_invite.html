@@ -38,9 +38,15 @@
             </form>
           {% else %}
             <p class="buttons">
-              <a class="pg-button-primary" href="{% url 'teams:signup_after_invite' invitation.id %}">
-                {% translate "Create Account to Accept" %}
-              </a>
+              {% if account_exists %}
+                <a class="pg-button-primary" href="{% url 'account_login' %}?next={% url 'teams:accept_invitation' invitation.id %}">
+                  {% translate "Log in to Accept" %}
+                </a>
+              {% else %}
+                <a class="pg-button-primary" href="{% url 'teams:signup_after_invite' invitation.id %}">
+                  {% translate "Create Account to Accept" %}
+                </a>
+              {% endif %}
             </p>
           {% endif %}
         {% else %}

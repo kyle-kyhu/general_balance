@@ -45,8 +45,6 @@ if RENDER_EXTERNAL_HOSTNAME:
 #     "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default=None),
 # }
 
-SERVER_EMAIL = "noreply@generalbalance.com"
-DEFAULT_FROM_EMAIL = "kylehunt22@gmail.com"
 ADMINS = [
     ("Your Name", "kylehunt22@gmail.com"),
 ]
