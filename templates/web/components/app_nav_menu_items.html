@@ -8,7 +8,12 @@
     {% translate "Dashboard" %}
   </a>
 </li>
-{% include "web/components/team_nav.html" %}
+<li>
+  <a href="{% url 'web:flowbite' %}" {% if active_tab == 'flowbite-demo' %}class="active"{% endif %}>
+    <i class="fa fa-circle-play h-4 w-4"></i>
+    {% translate "Flowbite Demo" %}
+  </a>
+</li>
 {% if not user.is_anonymous %}
 <li class="menu-title">
   <span>{% translate "My Account" %}</span>

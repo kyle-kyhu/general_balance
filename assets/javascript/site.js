@@ -3,3 +3,4 @@
 import './htmx';
 import './mock-i18n';
 import './alpine';
+import 'flowbite';

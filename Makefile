@@ -78,16 +78,10 @@ npm-watch: ## Runs npm watch in the container (recommended for dev)
 npm-type-check: ## Runs the type checker on the front end TypeScript code
 	@docker compose run --rm --no-deps web npm run type-check
 
-build-api-client:  ## Update the JavaScript API client code.
-	@docker run --rm --network host -v $(shell pwd)/api-client:/local openapitools/openapi-generator-cli:v7.5.0 generate \
-	-i http://localhost:8000/api/schema/ \
-	-g typescript-fetch \
-	-o /local/
-
 upgrade: pip-compile build start-bg migrations migrate npm-install npm-dev
 
 .PHONY: help
 .DEFAULT_GOAL := help
 
 help:
-	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

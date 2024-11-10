@@ -9,6 +9,7 @@ module.exports = {
     './assets/**/*.ts',
     './templates/**/*.html',
     './apps/web/templatetags/form_tags.py',
+    './node_modules/flowbite/**/*.js',
   ],
   safelist: [
     'alert-success',
@@ -34,5 +35,6 @@ module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
     require("daisyui"),
+    require('flowbite/plugin'),
   ],
 }

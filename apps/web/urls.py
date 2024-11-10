@@ -16,12 +16,11 @@ urlpatterns = [
     path("500/", TemplateView.as_view(template_name="500.html"), name="500"),
     path("simulate_error/", views.simulate_error),
     path("health/", views.HealthCheck.as_view(), name="health_check"),
+    path(
+        "ui/flowbite/",
+        TemplateView.as_view(
+            template_name="web/ui_demos/flowbite/flowbite_demo.html", extra_context={"active_tab": "flowbite"}
+        ),
+        name="flowbite",
+    ),
 ]
-
-
-team_urlpatterns = (
-    [
-        path("", views.team_home, name="home"),
-    ],
-    "web_team",
-)
