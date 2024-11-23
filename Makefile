@@ -50,7 +50,7 @@ pip-compile: ## Compiles your requirements.in file to requirements.txt
 	@docker compose run --rm --no-deps web $(pip_compile_cmd) requirements/dev-requirements.in -o requirements/dev-requirements.txt
 	@docker compose run --rm --no-deps web $(pip_compile_cmd) requirements/prod-requirements.in -o requirements/prod-requirements.txt
 
-requirements: pip-compile build restart  ## Rebuild your requirements and restart your containers
+requirements: pip-compile build stop start-bg  ## Rebuild your requirements and restart your containers
 
 ruff-format: ## Runs ruff formatter on the codebase
 	@docker compose run --rm --no-deps web ruff format .
@@ -78,10 +78,15 @@ npm-watch: ## Runs npm watch in the container (recommended for dev)
 npm-type-check: ## Runs the type checker on the front end TypeScript code
 	@docker compose run --rm --no-deps web npm run type-check
 
-upgrade: pip-compile build start-bg migrations migrate npm-install npm-dev
+upgrade: requirements migrations migrate npm-install npm-dev
 
 .PHONY: help
 .DEFAULT_GOAL := help
 
 help:
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+# catch-all for any undefined targets - this prevents error messages
+# when running things like make npm-install <package>
+%:
+	@:

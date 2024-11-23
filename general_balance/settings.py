@@ -71,7 +71,7 @@ THIRD_PARTY_APPS = [
     "health_check.contrib.celery",
     "health_check.contrib.redis",
     "django_celery_beat",
-    "template_partials",
+    "template_partials.apps.SimpleAppConfig",
 ]
 
 # Put your project-specific apps here
@@ -120,13 +120,30 @@ ROOT_URLCONF = "general_balance.urls"
 
 # used to disable the cache in dev, but turn it on in production.
 # more here: https://nickjanetakis.com/blog/django-4-1-html-templates-are-cached-by-default-with-debug-true
-_DEFAULT_LOADERS = [
+_LOW_LEVEL_LOADERS = [
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader",
 ]
 
-_CACHED_LOADERS = [("django.template.loaders.cached.Loader", _DEFAULT_LOADERS)]
+# Manually load template partials to allow for easier integration with other templating systems
+# like django-cotton.
+# https://github.com/carltongibson/django-template-partials?tab=readme-ov-file#advanced-configuration
 
+_DEFAULT_LOADERS = [
+    (
+        "template_partials.loader.Loader",
+        _LOW_LEVEL_LOADERS,
+    ),
+]
+
+_CACHED_LOADERS = [
+    (
+        "template_partials.loader.Loader",
+        [
+            ("django.template.loaders.cached.Loader", _LOW_LEVEL_LOADERS),
+        ],
+    ),
+]
 
 TEMPLATES = [
     {
@@ -145,6 +162,9 @@ TEMPLATES = [
                 "apps.web.context_processors.google_analytics_id",
             ],
             "loaders": _DEFAULT_LOADERS if DEBUG else _CACHED_LOADERS,
+            "builtins": [
+                "template_partials.templatetags.partials",
+            ],
         },
     },
 ]
@@ -170,7 +190,7 @@ else:
         }
     }
 
-# Auth / login stuff
+# Auth and Login
 
 # Django recommends overriding the user model even if you don"t think you need to because it makes
 # future changes much easier.

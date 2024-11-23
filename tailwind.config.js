@@ -5,10 +5,9 @@ module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
   content: [
     './apps/**/*.html',
-    './assets/**/*.js',
-    './assets/**/*.ts',
-    './templates/**/*.html',
     './apps/web/templatetags/form_tags.py',
+    './assets/**/*.{js,ts,jsx,tsx,vue}',
+    './templates/**/*.html',
     './node_modules/flowbite/**/*.js',
   ],
   safelist: [

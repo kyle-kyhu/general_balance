@@ -2,5 +2,5 @@
 #    uv pip compile --no-emit-package setuptools --no-strip-extras requirements/prod-requirements.in -o requirements/prod-requirements.txt
 gunicorn==23.0.0
     # via -r requirements/prod-requirements.in
-packaging==24.1
+packaging==24.2
     # via gunicorn

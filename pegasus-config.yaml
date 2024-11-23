@@ -5,7 +5,7 @@ cli:
   template_directory: templates
   use_teams: false
 default_context:
-  _pegasus_version: 2024.11.1
+  _pegasus_version: 2024.11.3
   ai_chat_mode: none
   ai_image_mode: none
   author_name: Kyle
@@ -28,6 +28,7 @@ default_context:
   post_process: y
   project_name: General Balance
   project_slug: general_balance
+  python_package_manager: pip-tools
   standalone_front_end: none
   stripe_payment_mode: checkout
   subscription_billing_model: default
@@ -38,6 +39,7 @@ default_context:
   use_api_keys: n
   use_async_example: n
   use_cloud_media_storage: y
+  use_dark_mode: y
   use_debug_toolbar: y
   use_docker: y
   use_ecommerce_example: n
