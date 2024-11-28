@@ -1,0 +1,10 @@
+{% load i18n %}
+{% load team_tags %}
+{% if request.team %}
+  <li>
+    <a href="{% url 'teams_example:player_list' request.team.slug %}" {% if active_tab == 'teams_example' %}class="active"{% endif %}>
+      <i class="fa fa-rocket h-4 w-4"></i>
+      {% translate "Example App" %}
+    </a>
+  </li>
+{% endif %}
