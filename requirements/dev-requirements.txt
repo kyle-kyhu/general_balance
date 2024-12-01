@@ -58,7 +58,7 @@ nodeenv==1.9.1
     # via pre-commit
 packaging==24.2
     # via build
-pegasus-cli==0.6
+pegasus-cli==0.7
     # via -r requirements/dev-requirements.in
 pip==24.3.1
     # via pip-tools

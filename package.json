@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "alpinejs": "^3.14.3",
-    "api-client": "file:./api-client",
     "chart.js": "^4.4.6",
     "daisyui": "^4.12.14",
     "flowbite": "^2.5.2",
