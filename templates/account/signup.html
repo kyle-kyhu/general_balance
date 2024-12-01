@@ -22,12 +22,6 @@
           {% if project_settings.ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE %}
           {% render_field form.password2 %}
           {% endif %}
-          {% if invitation %}
-            <input type="hidden" name="invitation_id" value="{{ invitation.id }}">
-            {{ form.invitation_id.errors }}
-          {% else %}
-            {% render_field form.team_name %}
-          {% endif %}
           {% render_field form.terms_agreement %}
           {% if turnstile_key %}
           <div class="cf-turnstile" data-sitekey="{{ turnstile_key }}" data-response-field-name="turnstile_token"></div>

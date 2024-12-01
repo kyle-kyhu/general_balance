@@ -21,21 +21,11 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-
-from apps.teams.urls import team_urlpatterns as single_team_urls
-from apps.web.urls import team_urlpatterns as web_team_urls
 from apps.web.sitemaps import StaticViewSitemap
 
 sitemaps = {
     "static": StaticViewSitemap(),
 }
-
-# urls that are unique to using a team should go here
-team_urlpatterns = [
-    path("", include(web_team_urls)),
-    path("team/", include(single_team_urls)),
-    path("example/", include("apps.teams_example.urls")),
-]
 
 urlpatterns = [
     # redirect Django admin login to main login page
@@ -45,11 +35,8 @@ urlpatterns = [
     path("demo/", include("apps.demo.urls")),  # KH legary code
     path("dashboard/", include("apps.dashboard.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
-    path("a/<slug:team_slug>/", include(team_urlpatterns)),
     path("accounts/", include("allauth.urls")),
     path("users/", include("apps.users.urls")),
-    path("teams/", include("apps.teams.urls")),
-    path("workflows/", include("apps.workflows.urls")),  # new
     path("", include("apps.web.urls")),
     path("support/", include("apps.support.urls")),
     path("celery-progress/", include("celery_progress.urls")),

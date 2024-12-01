@@ -3,4 +3,4 @@ django-debug-toolbar
 pip-tools
 pre-commit
 ruff
-pegasus-cli
+pegasus-cli>=0.7

@@ -79,8 +79,6 @@ PROJECT_APPS = [
     "apps.users.apps.UserConfig",
     "apps.dashboard.apps.DashboardConfig",
     "apps.web",
-    "apps.teams.apps.TeamConfig",
-    "apps.teams_example.apps.TeamsExampleConfig",
     "apps.amwell",
     "apps.demo",
     "apps.workflows.apps.WorkflowsConfig",
@@ -99,7 +97,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "apps.teams.middleware.TeamsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "hijack.middleware.HijackUserMiddleware",
@@ -164,8 +161,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.web.context_processors.project_meta",
-                "apps.teams.context_processors.team",
-                "apps.teams.context_processors.user_teams",
                 # this line can be removed if not using google analytics
                 "apps.web.context_processors.google_analytics_id",
             ],
@@ -226,7 +221,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Allauth setup
 
-ACCOUNT_ADAPTER = "apps.teams.adapter.AcceptInvitationAdapter"
+ACCOUNT_ADAPTER = "apps.users.adapter.EmailAsUsernameAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
@@ -241,7 +236,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
 ACCOUNT_FORMS = {
-    "signup": "apps.teams.forms.TeamSignupForm",
+    "signup": "apps.users.forms.TermsSignupForm",
 }
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
@@ -393,9 +388,6 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 # A list of tokens that can be used to access the health check endpoint
 HEALTH_CHECK_TOKENS = env.list("HEALTH_CHECK_TOKENS", default="")
 
-# Waffle config
-
-WAFFLE_FLAG_MODEL = "teams.Flag"
 
 # Pegasus config
 

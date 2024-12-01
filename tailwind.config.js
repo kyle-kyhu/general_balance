@@ -33,8 +33,10 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/typography'),
+    require('flowbite/plugin')({
+      forms: false,
+    }),
     require("daisyui"),
-    require('flowbite/plugin'),
   ],
 // KH - added line below to enable daisyui
   daisyui: {
