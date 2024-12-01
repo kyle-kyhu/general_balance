@@ -1,10 +1,14 @@
 module.exports = {
+  daisyui: {
+    themes: ["light", "dark"],
+  },
+  darkMode: ["class", '[data-theme="dark"]'],
   content: [
     './apps/**/*.html',
-    './assets/**/*.js',
-    './assets/**/*.ts',
-    './templates/**/*.html',
     './apps/web/templatetags/form_tags.py',
+    './assets/**/*.{js,ts,jsx,tsx,vue}',
+    './templates/**/*.html',
+    './node_modules/flowbite/**/*.js',
   ],
   safelist: [
     'alert-success',
@@ -22,7 +26,6 @@ module.exports = {
     },
     container: {
       center: true,
-      // padding: '2rem',
     },
   },
   variants: {
@@ -31,6 +34,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
     require("daisyui"),
+    require('flowbite/plugin'),
   ],
 // KH - added line below to enable daisyui
   daisyui: {

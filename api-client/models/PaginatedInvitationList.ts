@@ -18,6 +18,7 @@ import {
     InvitationFromJSON,
     InvitationFromJSONTyped,
     InvitationToJSON,
+    InvitationToJSONTyped,
 } from './Invitation';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedInvitationList {
      * @type {string}
      * @memberof PaginatedInvitationList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedInvitationList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Invitation>}
@@ -55,9 +56,9 @@ export interface PaginatedInvitationList {
 /**
  * Check if a given object implements the PaginatedInvitationList interface.
  */
-export function instanceOfPaginatedInvitationList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedInvitationList(value: object): value is PaginatedInvitationList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 
@@ -78,10 +79,15 @@ export function PaginatedInvitationListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedInvitationListToJSON(value?: PaginatedInvitationList | null): any {
+  export function PaginatedInvitationListToJSON(json: any): PaginatedInvitationList {
+      return PaginatedInvitationListToJSONTyped(json, false);
+  }
+
+  export function PaginatedInvitationListToJSONTyped(value?: PaginatedInvitationList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],

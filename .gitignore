@@ -1,4 +1,6 @@
 .idea
+.vscode
+*.code-workspace
 *.pyc
 *~
 db.sqlite3
@@ -17,7 +19,9 @@ _dist/
 .DS_Store
 .direnv
 .envrc
-
+.kamal/secrets
+# KH added these lines
+.gb/
 # uncomment these lines after setting up the front-end build pipeline in dev and production
 # static/css/
 # static/js/

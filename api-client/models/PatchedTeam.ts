@@ -18,12 +18,14 @@ import {
     InvitationFromJSON,
     InvitationFromJSONTyped,
     InvitationToJSON,
+    InvitationToJSONTyped,
 } from './Invitation';
 import type { Membership } from './Membership';
 import {
     MembershipFromJSON,
     MembershipFromJSONTyped,
     MembershipToJSON,
+    MembershipToJSONTyped,
 } from './Membership';
 
 /**
@@ -79,7 +81,7 @@ export interface PatchedTeam {
 /**
  * Check if a given object implements the PatchedTeam interface.
  */
-export function instanceOfPatchedTeam(value: object): boolean {
+export function instanceOfPatchedTeam(value: object): value is PatchedTeam {
     return true;
 }
 
@@ -103,10 +105,15 @@ export function PatchedTeamFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedTeamToJSON(value?: Omit<PatchedTeam, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'> | null): any {
+  export function PatchedTeamToJSON(json: any): PatchedTeam {
+      return PatchedTeamToJSONTyped(json, false);
+  }
+
+  export function PatchedTeamToJSONTyped(value?: Omit<PatchedTeam, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'name': value['name'],

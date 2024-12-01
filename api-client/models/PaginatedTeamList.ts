@@ -18,6 +18,7 @@ import {
     TeamFromJSON,
     TeamFromJSONTyped,
     TeamToJSON,
+    TeamToJSONTyped,
 } from './Team';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedTeamList {
      * @type {string}
      * @memberof PaginatedTeamList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedTeamList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Team>}
@@ -55,9 +56,9 @@ export interface PaginatedTeamList {
 /**
  * Check if a given object implements the PaginatedTeamList interface.
  */
-export function instanceOfPaginatedTeamList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedTeamList(value: object): value is PaginatedTeamList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 
@@ -78,10 +79,15 @@ export function PaginatedTeamListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedTeamListToJSON(value?: PaginatedTeamList | null): any {
+  export function PaginatedTeamListToJSON(json: any): PaginatedTeamList {
+      return PaginatedTeamListToJSONTyped(json, false);
+  }
+
+  export function PaginatedTeamListToJSONTyped(value?: PaginatedTeamList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],

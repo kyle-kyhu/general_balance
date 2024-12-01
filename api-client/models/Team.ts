@@ -18,12 +18,14 @@ import {
     InvitationFromJSON,
     InvitationFromJSONTyped,
     InvitationToJSON,
+    InvitationToJSONTyped,
 } from './Invitation';
 import type { Membership } from './Membership';
 import {
     MembershipFromJSON,
     MembershipFromJSONTyped,
     MembershipToJSON,
+    MembershipToJSONTyped,
 } from './Membership';
 
 /**
@@ -79,13 +81,13 @@ export interface Team {
 /**
  * Check if a given object implements the Team interface.
  */
-export function instanceOfTeam(value: object): boolean {
-    if (!('id' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('members' in value)) return false;
-    if (!('invitations' in value)) return false;
-    if (!('dashboardUrl' in value)) return false;
-    if (!('isAdmin' in value)) return false;
+export function instanceOfTeam(value: object): value is Team {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('members' in value) || value['members'] === undefined) return false;
+    if (!('invitations' in value) || value['invitations'] === undefined) return false;
+    if (!('dashboardUrl' in value) || value['dashboardUrl'] === undefined) return false;
+    if (!('isAdmin' in value) || value['isAdmin'] === undefined) return false;
     return true;
 }
 
@@ -109,10 +111,15 @@ export function TeamFromJSONTyped(json: any, ignoreDiscriminator: boolean): Team
     };
 }
 
-export function TeamToJSON(value?: Omit<Team, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'> | null): any {
+  export function TeamToJSON(json: any): Team {
+      return TeamToJSONTyped(json, false);
+  }
+
+  export function TeamToJSONTyped(value?: Omit<Team, 'id'|'members'|'invitations'|'dashboard_url'|'is_admin'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'name': value['name'],

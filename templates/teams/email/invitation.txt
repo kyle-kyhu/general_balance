@@ -1,3 +1,7 @@
-You've been invited by {{ invitation.invited_by.get_display_name }} to join {{ project_name }}!
+{% load i18n %}
+{% blocktranslate with team_name=invitation.team.name invited_by=invitation.invited_by.get_display_name %}
+You've been invited by {{ invited_by }} to join {{ team_name }} on {{ project_name }}!
 
-To accept your invitation, visit this URL: {{ invitation.get_url }}
+Click the link below to activate your account.
+
+Accept invitation:{% endblocktranslate %} {{ invitation.get_url }}

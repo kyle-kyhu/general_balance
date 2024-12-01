@@ -30,10 +30,6 @@ USE_HTTPS_IN_ABSOLUTE_URLS = True
 # If you don't want to use environment variables to set production hosts you can add them here
 # ALLOWED_HOSTS = ["example.com"]
 
-RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default=None)
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
 # Your email config goes here.
 # see https://github.com/anymail/django-anymail for more details / examples
 # To use mailgun, uncomment the lines below and make sure your key and domain
@@ -45,14 +41,12 @@ if RENDER_EXTERNAL_HOSTNAME:
 #     "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default=None),
 # }
 
-SERVER_EMAIL = "noreply@generalbalance.com"
-DEFAULT_FROM_EMAIL = "kylehunt22@gmail.com"
 ADMINS = [
     ("Your Name", "kylehunt22@gmail.com"),
 ]
 
 ALLOWED_HOSTS = [
-    'generalbalance.com',
-    'www.generalbalance.com',
-    'general-balance.onrender.com',
-    ]
+    "generalbalance.com",
+    "www.generalbalance.com",
+    "general-balance.onrender.com",
+]

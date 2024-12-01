@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from apps.users.models import CustomUser
+
 from ..invitations import clear_invite_from_session, process_invitation
 from ..models import Invitation
 from ..roles import is_member
@@ -42,11 +44,13 @@ def accept_invitation(request, invitation_id):
                 messages.success(request, _("You successfully joined {}").format(invitation.team.name))
                 return HttpResponseRedirect(reverse("web_team:home", args=[invitation.team.slug]))
 
+    account_exists = CustomUser.objects.filter(email=invitation.email).exists()
     return render(
         request,
         "teams/accept_invite.html",
         {
             "invitation": invitation,
+            "account_exists": account_exists,
         },
     )
 

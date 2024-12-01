@@ -18,6 +18,7 @@ import {
     RoleEnumFromJSON,
     RoleEnumFromJSONTyped,
     RoleEnumToJSON,
+    RoleEnumToJSONTyped,
 } from './RoleEnum';
 
 /**
@@ -64,14 +65,16 @@ export interface Invitation {
     isAccepted?: boolean;
 }
 
+
+
 /**
  * Check if a given object implements the Invitation interface.
  */
-export function instanceOfInvitation(value: object): boolean {
-    if (!('id' in value)) return false;
-    if (!('team' in value)) return false;
-    if (!('email' in value)) return false;
-    if (!('invitedBy' in value)) return false;
+export function instanceOfInvitation(value: object): value is Invitation {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('team' in value) || value['team'] === undefined) return false;
+    if (!('email' in value) || value['email'] === undefined) return false;
+    if (!('invitedBy' in value) || value['invitedBy'] === undefined) return false;
     return true;
 }
 
@@ -94,10 +97,15 @@ export function InvitationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InvitationToJSON(value?: Omit<Invitation, 'id'|'invited_by'> | null): any {
+  export function InvitationToJSON(json: any): Invitation {
+      return InvitationToJSONTyped(json, false);
+  }
+
+  export function InvitationToJSONTyped(value?: Omit<Invitation, 'id'|'invited_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'team': value['team'],

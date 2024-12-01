@@ -41,14 +41,15 @@ urlpatterns = [
     # redirect Django admin login to main login page
     path("admin/login/", RedirectView.as_view(pattern_name="account_login")),
     path("admin/", admin.site.urls),
-    path("amwell/", include("apps.amwell.urls")), # KH - added this line
-    path("demo/", include("apps.demo.urls")), # KH - added this line
+    path("amwell/", include("apps.amwell.urls")),  # legacy code
+    path("demo/", include("apps.demo.urls")),  # KH legary code
     path("dashboard/", include("apps.dashboard.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("a/<slug:team_slug>/", include(team_urlpatterns)),
     path("accounts/", include("allauth.urls")),
     path("users/", include("apps.users.urls")),
     path("teams/", include("apps.teams.urls")),
+    path("workflows/", include("apps.workflows.urls")),  # new
     path("", include("apps.web.urls")),
     path("support/", include("apps.support.urls")),
     path("celery-progress/", include("celery_progress.urls")),
@@ -60,3 +61,6 @@ urlpatterns = [
     # hijack urls for impersonation
     path("hijack/", include("hijack.urls", namespace="hijack")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.ENABLE_DEBUG_TOOLBAR:
+    urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

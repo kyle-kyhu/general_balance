@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/stable/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 import environ
@@ -28,6 +29,7 @@ SECRET_KEY = env("SECRET_KEY", default="django-insecure-IiOfHY93ZTgG3CMd2gnzMaPm
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=True)
+ENABLE_DEBUG_TOOLBAR = env.bool("ENABLE_DEBUG_TOOLBAR", default=False) and "test" not in sys.argv
 
 # Note: It is not recommended to set ALLOWED_HOSTS to "*" in production
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
@@ -52,6 +54,7 @@ THIRD_PARTY_APPS = [
     "allauth",  # allauth account/registration management
     "allauth.account",
     "allauth.socialaccount",
+    "django_htmx",
     "django_otp",
     "django_otp.plugins.otp_totp",
     "django_otp.plugins.otp_static",
@@ -63,7 +66,12 @@ THIRD_PARTY_APPS = [
     "hijack.contrib.admin",  # hijack buttons in the admin
     "whitenoise.runserver_nostatic",  # whitenoise runserver
     "waffle",
+    "health_check",
+    "health_check.db",
+    "health_check.contrib.celery",
+    "health_check.contrib.redis",
     "django_celery_beat",
+    "template_partials.apps.SimpleAppConfig",
 ]
 
 # Put your project-specific apps here
@@ -75,11 +83,13 @@ PROJECT_APPS = [
     "apps.teams_example.apps.TeamsExampleConfig",
     "apps.amwell",
     "apps.demo",
+    "apps.workflows.apps.WorkflowsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
+    "apps.web.middleware.healthchecks.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -87,6 +97,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "apps.teams.middleware.TeamsMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -95,19 +106,50 @@ MIDDLEWARE = [
     "waffle.middleware.WaffleMiddleware",
 ]
 
+if ENABLE_DEBUG_TOOLBAR:
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    INSTALLED_APPS.append("debug_toolbar")
+    INTERNAL_IPS = ["127.0.0.1"]
+    try:
+        import socket
+
+        # get hostname for Docker environments
+        # See https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#configure-internal-ips
+        hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+        # add discovered IPs plus some common defaults
+        INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["192.168.65.1", "10.0.2.2"]
+    except OSError as e:
+        print(f"{e} while attempting to resolve system hostname. Using INTERNAL_IPS={INTERNAL_IPS}")
 
 ROOT_URLCONF = "general_balance.urls"
 
 
 # used to disable the cache in dev, but turn it on in production.
 # more here: https://nickjanetakis.com/blog/django-4-1-html-templates-are-cached-by-default-with-debug-true
-_DEFAULT_LOADERS = [
+_LOW_LEVEL_LOADERS = [
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader",
 ]
 
-_CACHED_LOADERS = [("django.template.loaders.cached.Loader", _DEFAULT_LOADERS)]
+# Manually load template partials to allow for easier integration with other templating systems
+# like django-cotton.
+# https://github.com/carltongibson/django-template-partials?tab=readme-ov-file#advanced-configuration
 
+_DEFAULT_LOADERS = [
+    (
+        "template_partials.loader.Loader",
+        _LOW_LEVEL_LOADERS,
+    ),
+]
+
+_CACHED_LOADERS = [
+    (
+        "template_partials.loader.Loader",
+        [
+            ("django.template.loaders.cached.Loader", _LOW_LEVEL_LOADERS),
+        ],
+    ),
+]
 
 TEMPLATES = [
     {
@@ -128,6 +170,9 @@ TEMPLATES = [
                 "apps.web.context_processors.google_analytics_id",
             ],
             "loaders": _DEFAULT_LOADERS if DEBUG else _CACHED_LOADERS,
+            "builtins": [
+                "template_partials.templatetags.partials",
+            ],
         },
     },
 ]
@@ -153,7 +198,7 @@ else:
         }
     }
 
-# Auth / login stuff
+# Auth and Login
 
 # Django recommends overriding the user model even if you don"t think you need to because it makes
 # future changes much easier.
@@ -281,8 +326,20 @@ FORMS_URLFIELD_ASSUME_HTTPS = True
 
 # Email setup
 
-# use in development
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# default email used by your server
+SERVER_EMAIL = env("SERVER_EMAIL", default="noreply@generalbalance.com")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="kylehunt22@gmail.com")
+
+# The default value will print emails to the console, but you can change that here
+# and in your environment.
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+
+# Most production backends will require further customization. The below example uses Mailgun.
+# ANYMAIL = {
+#     "MAILGUN_API_KEY": env("MAILGUN_API_KEY", default=None),
+#     "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default=None),
+# }
+
 # use in production
 # see https://github.com/anymail/django-anymail for more details/examples
 # EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
@@ -332,6 +389,10 @@ if REDIS_URL.startswith("rediss"):
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
+# Health Checks
+# A list of tokens that can be used to access the health check endpoint
+HEALTH_CHECK_TOKENS = env.list("HEALTH_CHECK_TOKENS", default="")
+
 # Waffle config
 
 WAFFLE_FLAG_MODEL = "teams.Flag"
@@ -356,6 +417,23 @@ ADMINS = [("Kyle", "kylehunt22@gmail.com")]
 # Add your google analytics ID to the environment to connect to Google Analytics
 GOOGLE_ANALYTICS_ID = env("GOOGLE_ANALYTICS_ID", default="")
 
+# these daisyui themes are used to set the dark and light themes for the site
+# they must be valid themes included in your tailwind.config.js file.
+# more here: https://daisyui.com/docs/themes/
+LIGHT_THEME = "light"
+DARK_THEME = "dark"
+
+# Sentry setup
+
+# populate this to configure sentry. should take the form: "https://****@sentry.io/12345"
+SENTRY_DSN = env("SENTRY_DSN", default="")
+
+
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()])
 
 LOGGING = {
     "version": 1,

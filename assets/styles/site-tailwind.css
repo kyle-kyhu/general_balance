@@ -10,10 +10,10 @@
 
 @import "tailwindcss/utilities";
 
-/* set css variables to DaisyUI default colors: https://daisyui.com/docs/colors/ */
+/* set pegasus css variables to DaisyUI default colors: https://daisyui.com/docs/colors/ */
 
 :root {
-  --primary: #570df8;
-  --danger: #f87272;
-  --success: #36d399;
+  --primary: oklch(var(--p));
+  --danger: oklch(var(--er));
+  --success: oklch(var(--su));
 }

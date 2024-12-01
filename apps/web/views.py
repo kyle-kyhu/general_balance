@@ -1,8 +1,9 @@
 from django.conf import settings
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
-from django.db import models
+
+from health_check.views import MainView
 
 
 def home(request):
@@ -22,12 +23,10 @@ def home(request):
 def simulate_error(request):
     raise Exception("This is a simulated error.")
 
-def team_home(request):
-    return render(
-        request,
-        "teams/list_teams.html",
-        context={
-            "active_tab": "team",
-            "page_title": _("Team"),
-        },
-    )
+
+class HealthCheck(MainView):
+    def get(self, request, *args, **kwargs):
+        tokens = settings.HEALTH_CHECK_TOKENS
+        if tokens and request.GET.get("token") not in tokens:
+            raise Http404
+        return super().get(request, *args, **kwargs)

@@ -18,6 +18,7 @@ import {
     RoleEnumFromJSON,
     RoleEnumFromJSONTyped,
     RoleEnumToJSON,
+    RoleEnumToJSONTyped,
 } from './RoleEnum';
 
 /**
@@ -64,16 +65,18 @@ export interface Membership {
     role: RoleEnum;
 }
 
+
+
 /**
  * Check if a given object implements the Membership interface.
  */
-export function instanceOfMembership(value: object): boolean {
-    if (!('id' in value)) return false;
-    if (!('userId' in value)) return false;
-    if (!('firstName' in value)) return false;
-    if (!('lastName' in value)) return false;
-    if (!('displayName' in value)) return false;
-    if (!('role' in value)) return false;
+export function instanceOfMembership(value: object): value is Membership {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('userId' in value) || value['userId'] === undefined) return false;
+    if (!('firstName' in value) || value['firstName'] === undefined) return false;
+    if (!('lastName' in value) || value['lastName'] === undefined) return false;
+    if (!('displayName' in value) || value['displayName'] === undefined) return false;
+    if (!('role' in value) || value['role'] === undefined) return false;
     return true;
 }
 
@@ -96,10 +99,15 @@ export function MembershipFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function MembershipToJSON(value?: Omit<Membership, 'id'|'user_id'|'first_name'|'last_name'|'display_name'> | null): any {
+  export function MembershipToJSON(json: any): Membership {
+      return MembershipToJSONTyped(json, false);
+  }
+
+  export function MembershipToJSONTyped(value?: Omit<Membership, 'id'|'user_id'|'first_name'|'last_name'|'display_name'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'role': RoleEnumToJSON(value['role']),

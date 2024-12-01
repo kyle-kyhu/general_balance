@@ -6,7 +6,7 @@ from apps.teams.models import Team
 from apps.users.models import CustomUser
 
 
-@override_settings(ACCOUNT_ADAPTER="apps.teams.adapter.AcceptInvitationAdapter")
+@override_settings(ACCOUNT_ADAPTER="apps.teams.adapter.AcceptInvitationAdapter", TURNSTILE_SECRET=None)
 class TestSignupView(TestCase):
     def test_signup_normal(self):
         self._run_test(team_name="Alice Team", expected_slug="alice-team")

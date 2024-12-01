@@ -1,0 +1,38 @@
+This project is a web app for accountants.  
+
+Background:
+I am a data analytic. My work day consists of updating excel models for my team.  
+Currently, I have each process in a separate diretory of my laptop and a python file for each process in that directory.
+I would like to duplicate my local process on a web app. 
+This project's goal is to automate my processes.   
+
+Main use case:
+- a user can upload data in a csv file with new data, an excel template that needs to be updated with the new csv file and a python file for each process.  
+- Once a process is created with all three files (e.g csv, excel and python) the process can be saved.  
+- Once the process is saved it can be ran ad hoc.  
+- In the saved process, the python file remains in the process, but the user will have to provide an updated excel template and csv file each time.
+
+Main website:
+- The main website will be a dashboard header with buttons below the dashboard.  
+- when processes are saved, they should appear on this dashboard.  
+- The first button should be 'create new' button.  
+- The saved processes should be below the new process button.  
+
+New process button:
+- When a new process button is selected, there should be a options of what type of process does the user what to build. 
+- all processes contain data, an excel template and python file.
+- Process #1 - user provides the data via csv
+- Process #2 - the user gets the data via api 
+- Process #3 - the user gets the data via pdf
+
+I think each process should be saved in it's own app.
+
+UI/UX process #1
+- 3 buttons to upload data
+- Once a file is uploaded it should be visible and the user should be able to download the original file that was uploaded.  
+- There should be a "run" button.  
+- The run button should locate the python file against the csv and excel template.  
+- The output should be a completed excel template as well the original csv file, original excel template, py file and the new updated excel template.   
+- When then files are uploaded, they should be saved in the same directory as the python file.  
+
+

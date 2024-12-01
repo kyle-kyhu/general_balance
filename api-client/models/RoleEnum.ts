@@ -26,7 +26,14 @@ export type RoleEnum = typeof RoleEnum[keyof typeof RoleEnum];
 
 
 export function instanceOfRoleEnum(value: any): boolean {
-    return Object.values(RoleEnum).includes(value);
+    for (const key in RoleEnum) {
+        if (Object.prototype.hasOwnProperty.call(RoleEnum, key)) {
+            if (RoleEnum[key as keyof typeof RoleEnum] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 export function RoleEnumFromJSON(json: any): RoleEnum {
@@ -39,5 +46,9 @@ export function RoleEnumFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
 
 export function RoleEnumToJSON(value?: RoleEnum | null): any {
     return value as any;
+}
+
+export function RoleEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): RoleEnum {
+    return value as RoleEnum;
 }
 

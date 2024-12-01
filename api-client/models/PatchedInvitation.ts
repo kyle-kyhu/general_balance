@@ -18,6 +18,7 @@ import {
     RoleEnumFromJSON,
     RoleEnumFromJSONTyped,
     RoleEnumToJSON,
+    RoleEnumToJSONTyped,
 } from './RoleEnum';
 
 /**
@@ -64,10 +65,12 @@ export interface PatchedInvitation {
     isAccepted?: boolean;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedInvitation interface.
  */
-export function instanceOfPatchedInvitation(value: object): boolean {
+export function instanceOfPatchedInvitation(value: object): value is PatchedInvitation {
     return true;
 }
 
@@ -90,10 +93,15 @@ export function PatchedInvitationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInvitationToJSON(value?: Omit<PatchedInvitation, 'id'|'invited_by'> | null): any {
+  export function PatchedInvitationToJSON(json: any): PatchedInvitation {
+      return PatchedInvitationToJSONTyped(json, false);
+  }
+
+  export function PatchedInvitationToJSONTyped(value?: Omit<PatchedInvitation, 'id'|'invited_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'team': value['team'],
