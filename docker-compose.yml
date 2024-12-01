@@ -34,6 +34,10 @@ services:
     environment:
       PYTHONUNBUFFERED: '1'
       PYTHONDONTWRITEBYTECODE: '1'
+      DATABASE_HOST: 'db'           # Add these
+      DATABASE_NAME: 'general_balance'
+      DATABASE_USER: 'postgres'
+      DATABASE_PASSWORD: 'postgres'
     env_file:
       - ./.env
     restart: unless-stopped
