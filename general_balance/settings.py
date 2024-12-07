@@ -260,7 +260,7 @@ TURNSTILE_SECRET = env("TURNSTILE_SECRET", default=None)
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = False
 
