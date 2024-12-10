@@ -1,0 +1,26 @@
+{% extends "web/app/app_base.html" %}
+{% load static %}
+
+{% block title %}Create New Workflow{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Create New Workflow</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post">
+                {% csrf_token %}
+                <div class="card">
+                    <div class="card-body">
+                        {{ form.as_p }}
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Create Workflow</button>
+                            <a href="{% url 'workflows:workflow_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
