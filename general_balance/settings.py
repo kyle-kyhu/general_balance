@@ -289,7 +289,7 @@ STORAGES = {
     },
 }
 
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 USE_S3_MEDIA = env.bool("USE_S3_MEDIA", default=False)
@@ -368,21 +368,12 @@ SPECTACULAR_SETTINGS = {
     },
 }
 
-# Celery setup (using redis)
-if "REDIS_URL" in env:
-    REDIS_URL = env("REDIS_URL")
-elif "REDIS_TLS_URL" in env:
-    REDIS_URL = env("REDIS_TLS_URL")
-else:
-    REDIS_HOST = env("REDIS_HOST", default="localhost")
-    REDIS_PORT = env("REDIS_PORT", default="6379")
-    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
-
-if REDIS_URL.startswith("rediss"):
-    REDIS_URL = f"{REDIS_URL}?ssl_cert_reqs=none"
-
-CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+# Celery Configuration
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 
 # Health Checks
 # A list of tokens that can be used to access the health check endpoint

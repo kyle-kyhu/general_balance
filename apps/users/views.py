@@ -35,7 +35,7 @@ def profile(request):
                 form = CustomUserChangeForm(instance=user)
             user.save()
             messages.success(request, _("Profile successfully saved."))
- 
+
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(

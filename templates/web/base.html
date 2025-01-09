@@ -1,7 +1,7 @@
 {% load static %}
 {% load meta_tags %}
 <!DOCTYPE html>
-<html lang="en" {% if dark_mode %}class="dark" data-theme="{{ dark_theme }}"{% endif %}>
+<html lang="en" data-theme="corporate">
 <head>
     <meta charset="utf-8">
     <!--IE compatibility-->
@@ -63,10 +63,11 @@
 {% endblock footer %}
 {% endblock body_wrapper %}
   {% include 'web/components/messages-js.html' %}
-  <script>
+
+<!-- here is the toggle for dark and light mode -->
+
+  <!-- <script>
     function syncDarkMode() {
-      // change the dark and light theme values in settings.py to match the DaisyUI theme names
-      // to use for dark and light mode, and they will get updated here.
       const darkTheme = '{{ dark_theme }}' || 'dark';
       const lightTheme = '{{ light_theme }}' || 'light';
       const systemTheme = 'system';
@@ -75,12 +76,9 @@
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
       if (theme === darkTheme || (theme === systemTheme && prefersDark)) {
-        document.documentElement.classList.add('dark');
         document.documentElement.setAttribute('data-theme', darkTheme);
-        // set a cookie and use it during server rendering to avoid a flicker across page loads
         document.cookie = `theme=${darkTheme};path=/;max-age=31536000`;
       } else {
-        document.documentElement.classList.remove('dark');
         document.documentElement.setAttribute('data-theme', lightTheme);
         document.cookie = `theme=${lightTheme};path=/;max-age=31536000`;
       }
@@ -99,7 +97,7 @@
         }
       });
     });
-  </script>
+  </script> -->
 {% block page_js %}
 {% endblock page_js %}
 </body>

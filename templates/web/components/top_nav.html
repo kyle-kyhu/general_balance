@@ -42,11 +42,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" class="hidden dark:block" />
         </svg>
       </label>
-      <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" x-show="open" @click.away="open = false">
+      <!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" x-show="open" @click.away="open = false">
         <li><button @click="localStorage.setItem('theme', '{{ light_theme|default:'light' }}'); syncDarkMode(); open = false">Light</button></li>
         <li><button @click="localStorage.setItem('theme', '{{ dark_theme|default:'dark' }}'); syncDarkMode(); open = false">Dark</button></li>
         <li><button @click="localStorage.setItem('theme', 'system'); syncDarkMode(); open = false">System</button></li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </div>

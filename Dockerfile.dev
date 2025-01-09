@@ -9,11 +9,13 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     echo "deb https://deb.nodesource.com/node_20.x bookworm main" > /etc/apt/sources.list.d/nodesource.list && \
     wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
     apt-get update && \
-    apt-get install -yqq nodejs \
-    # install gettext for translations
+    apt-get install -yqq \
+    nodejs \
     gettext \
-    # required on M2 / ARM architecture
-    libpq-dev
+    libpq-dev \
+    python3-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
 # create code directory
 RUN mkdir /code

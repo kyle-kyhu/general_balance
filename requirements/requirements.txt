@@ -187,3 +187,7 @@ wcwidth==0.2.13
     # via prompt-toolkit
 whitenoise[brotli]==6.8.2
     # via -r requirements/requirements.in
+    
+# Data Processing
+pandas==2.1.4
+openpyxl==3.1.2  # For Excel file support

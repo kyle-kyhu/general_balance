@@ -1,9 +1,9 @@
 from django.urls import path
 
 from .views import (
-    ListView, 
+    ListView,
     CsvDetailedView,
-    CsvScriptView, 
+    CsvScriptView,
     CsvDownloadView,
     NewsView,
     StreamlitView,
@@ -18,5 +18,5 @@ urlpatterns = [
     path("csv/download/", CsvDownloadView.as_view(), name="demo_download"),
     path("news/", NewsView.as_view(), name="demo_news"),
     # do you want other weather api urls?
-    path('streamlit/', StreamlitView.as_view(), name='demo_streamlit'),
+    path("streamlit/", StreamlitView.as_view(), name="demo_streamlit"),
 ]

@@ -1,46 +1,48 @@
 from django.db import models
-from django.utils.text import slugify
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def workflow_directory_path(instance, filename):
-    # Files will be uploaded to MEDIA_ROOT/workflows/<workflow_slug>/<filename>
-    return f"workflows/{instance.slug}/{filename}"
+    # Files will be uploaded to MEDIA_ROOT/workflows/<id>/<filename>
+    path = f"workflows/{instance.id}/{filename}"
+    logger.info(f"Saving file to: {path}")
+    return path
 
 
 class Workflow(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    name = models.CharField(max_length=100)
     description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    # Required files
-    template_file = models.FileField(
-        upload_to=workflow_directory_path, help_text="Excel template file that will be used"
-    )
-    script_file = models.FileField(upload_to=workflow_directory_path, help_text="Python script that processes the data")
-
-    # Data source - only one should be used
+    # Data source choices
     DATA_SOURCE_CHOICES = [
-        ("CSV", "CSV File"),
-        ("EXCEL", "Excel File"),
-        ("NETSUITE", "NetSuite API"),
+        ("csv", "CSV File"),
+        ("excel", "Excel File"),
+        ("netsuite", "NetSuite API"),
+        ("salesforce", "Salesforce API"),
     ]
-    data_source = models.CharField(max_length=10, choices=DATA_SOURCE_CHOICES, default="EXCEL")
 
-    # Optional data files based on source type
+    data_source = models.CharField(
+        max_length=20,
+        choices=DATA_SOURCE_CHOICES,
+        default="csv",
+        help_text="Select the type of data source for this workflow",
+    )
+
+    template_file = models.FileField(upload_to=workflow_directory_path, null=True, blank=True)
+
     data_file = models.FileField(
         upload_to=workflow_directory_path, null=True, blank=True, help_text="Data file (CSV or Excel) if applicable"
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    script_file = models.FileField(upload_to=workflow_directory_path, null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
     def get_workflow_directory(self):
-        return f"workflows/{self.slug}"
+        return f"workflows/{self.id}"
