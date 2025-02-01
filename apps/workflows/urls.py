@@ -12,4 +12,6 @@ urlpatterns = [
     path("<int:pk>/edit/", WorkflowUpdateView.as_view(), name="workflow_edit"),
     path("<int:pk>/run/", views.run_workflow, name="run_workflow"),
     path("<int:pk>/validate/", views.validate_files, name="validate_files"),
+    path("<int:workflow_id>/upload-script/", views.upload_script, name="upload_script"),
+    path("<int:workflow_id>/download-script/", views.download_script, name="download_script"),
 ]

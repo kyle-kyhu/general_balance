@@ -126,20 +126,6 @@
                                 </div>
                             </div>
                             {% endif %}
-
-                            {% if workflow.script_file %}
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-file-code text-warning me-2"></i>
-                                    Python Script
-                                </div>
-                                <div>
-                                    <a href="{{ workflow.script_file.url }}" class="btn btn-sm btn-outline-primary" download>
-                                        <i class="fas fa-download"></i> Download
-                                    </a>
-                                </div>
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
 
@@ -157,6 +143,29 @@
                         <a href="{% url 'workflows:workflow_edit' workflow.pk %}" class="btn btn-primary">Edit</a>
                         <a href="{% url 'workflows:workflow_delete' workflow.pk %}" class="btn btn-danger">Delete</a>
                         <a href="{% url 'workflows:workflow_list' %}" class="btn btn-secondary">Back to List</a>
+                    </div>
+
+                    <div class="script-section">
+                        <h3>Python Script</h3>
+                        <h5>Steps</h5>
+                        <p>upload a py file and save it to the workflow</p>
+                        <p>run the workflow</p>
+                        
+                        <!-- Download Script Button -->
+                        {% if workflow.script_file %}
+                        <a href="{% url 'workflows:download_script' workflow.id %}" class="btn btn-primary">
+                            Download Script
+                        </a>
+                        {% endif %}
+
+                        <!-- Upload Script Form -->
+                        <form method="POST" enctype="multipart/form-data" action="{% url 'workflows:upload_script' workflow.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="file" name="script_file" accept=".py" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-success">Upload Script</button>
+                        </form>
                     </div>
                 </div>
             </div>

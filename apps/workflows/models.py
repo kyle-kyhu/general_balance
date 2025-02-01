@@ -46,3 +46,14 @@ class Workflow(models.Model):
 
     def get_workflow_directory(self):
         return f"workflows/{self.id}"
+
+    def save_script(self, script_file):
+        """Save a new script file to the workflow"""
+        self.script_file = script_file
+        self.save()
+
+    def get_script_path(self):
+        """Get the path to the script file"""
+        if self.script_file:
+            return self.script_file.path
+        return None

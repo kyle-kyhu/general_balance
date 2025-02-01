@@ -2,7 +2,7 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 import logging
 import importlib.util
 import sys
@@ -137,3 +137,25 @@ def validate_files(request, pk):
     except Exception as e:
         logger.error(f"Error validating files: {str(e)}")
         return JsonResponse({"error": str(e)}, status=400)
+
+
+def upload_script(request, workflow_id):
+    workflow = get_object_or_404(Workflow, id=workflow_id)
+    if request.method == "POST" and request.FILES.get("script_file"):
+        script_file = request.FILES["script_file"]
+        # Validate file type if needed
+        if not script_file.name.endswith(".py"):
+            messages.error(request, "Please upload a Python file (.py)")
+            return redirect("workflow_detail", workflow_id=workflow_id)
+
+        workflow.save_script(script_file)
+        messages.success(request, "Script uploaded successfully")
+    return redirect("workflow_detail", workflow_id=workflow_id)
+
+
+def download_script(request, workflow_id):
+    workflow = get_object_or_404(Workflow, id=workflow_id)
+    if workflow.script_file:
+        return FileResponse(workflow.script_file.open(), as_attachment=True)
+    messages.error(request, "No script file found")
+    return redirect("workflow_detail", workflow_id=workflow_id)
