@@ -5,16 +5,18 @@ logger = logging.getLogger(__name__)
 
 
 def workflow_directory_path(instance, filename):
-    # Files will be uploaded to MEDIA_ROOT/workflows/<id>/<filename>
+    # Add logging to debug the path creation
     path = f"workflows/{instance.id}/{filename}"
-    logger.info(f"Saving file to: {path}")
+    print(f"Creating path for file: {path}")  # This will show in your console
     return path
 
 
 class Workflow(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    data_source = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # Data source choices
     DATA_SOURCE_CHOICES = [
@@ -33,13 +35,11 @@ class Workflow(models.Model):
 
     template_file = models.FileField(upload_to=workflow_directory_path, null=True, blank=True)
 
-    data_file = models.FileField(
-        upload_to=workflow_directory_path, null=True, blank=True, help_text="Data file (CSV or Excel) if applicable"
-    )
+    data_file = models.FileField(upload_to=workflow_directory_path, null=True, blank=True)
 
     script_file = models.FileField(upload_to=workflow_directory_path, null=True, blank=True)
 
-    updated_at = models.DateTimeField(auto_now=True)
+    latest_output_file = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -57,3 +57,11 @@ class Workflow(models.Model):
         if self.script_file:
             return self.script_file.path
         return None
+
+    def save(self, *args, **kwargs):
+        # Add logging when saving
+        print(f"Saving workflow {self.id} with files:")
+        print(f"Template: {self.template_file.name if self.template_file else 'None'}")
+        print(f"Data: {self.data_file.name if self.data_file else 'None'}")
+        print(f"Script: {self.script_file.name if self.script_file else 'None'}")
+        super().save(*args, **kwargs)

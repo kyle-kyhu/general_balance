@@ -1,17 +1,14 @@
 from django.urls import path
-from .views import WorkflowListView, WorkflowCreateView, WorkflowDetailView, WorkflowDeleteView, WorkflowUpdateView
 from . import views
 
-
 app_name = "workflows"
+
 urlpatterns = [
-    path("", WorkflowListView.as_view(), name="workflow_list"),
-    path("new/", WorkflowCreateView.as_view(), name="workflow_new"),
-    path("<int:pk>/", WorkflowDetailView.as_view(), name="workflow_detail"),
-    path("<int:pk>/delete/", WorkflowDeleteView.as_view(), name="workflow_delete"),
-    path("<int:pk>/edit/", WorkflowUpdateView.as_view(), name="workflow_edit"),
-    path("<int:pk>/run/", views.run_workflow, name="run_workflow"),
+    path("", views.WorkflowListView.as_view(), name="workflow_list"),
+    path("new/", views.WorkflowCreateView.as_view(), name="workflow_new"),
+    path("<int:pk>/", views.WorkflowDetailView.as_view(), name="workflow_detail"),
+    path("<int:pk>/edit/", views.WorkflowUpdateView.as_view(), name="workflow_edit"),
+    path("<int:pk>/delete/", views.WorkflowDeleteView.as_view(), name="workflow_delete"),
     path("<int:pk>/validate/", views.validate_files, name="validate_files"),
-    path("<int:workflow_id>/upload-script/", views.upload_script, name="upload_script"),
     path("<int:workflow_id>/download-script/", views.download_script, name="download_script"),
 ]

@@ -6,9 +6,11 @@ from django.http import HttpResponse, JsonResponse, FileResponse
 import logging
 import importlib.util
 import sys
+import os
+from datetime import datetime
 
 from .models import Workflow
-from .forms import WorkflowForm
+from .forms import WorkflowForm, ScriptUploadForm
 
 logger = logging.getLogger(__name__)
 
@@ -49,28 +51,91 @@ class WorkflowDetailView(DetailView):
     template_name = "workflows/workflow_detail.html"
     context_object_name = "workflow"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["workflow_form"] = WorkflowForm(instance=self.object)
+        context["script_form"] = ScriptUploadForm()
+
+        # Add the latest generated file if it exists
+        if hasattr(self.object, "latest_output_file"):
+            context["output_file"] = self.object.latest_output_file
+
+        return context
+
     def post(self, request, *args, **kwargs):
         workflow = self.get_object()
-        script_file = request.FILES.get("script_file")
+        form_type = request.POST.get("form_type")
 
-        try:
-            if script_file:
-                logger.info(f"Received script file: {script_file.name}")
-                if workflow.script_file:
-                    logger.info(f"Deleting old script file: {workflow.script_file.path}")
-                    workflow.script_file.delete(save=False)
-                workflow.script_file = script_file
-                logger.info(f"Saving new script file to: {workflow.script_file.name}")
+        if form_type == "script":
+            form = ScriptUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                try:
+                    if workflow.script_file:
+                        workflow.script_file.delete(save=False)
+                    workflow.script_file = form.cleaned_data["script_file"]
+                    workflow.save()
+                    logger.info(f"Script file saved to: {workflow.script_file.path}")
+                    messages.success(request, "Script uploaded successfully.")
+                except Exception as e:
+                    logger.error(f"Error saving script: {str(e)}")
+                    messages.error(request, f"Error saving script: {str(e)}")
+        else:
+            # Handle workflow file uploads and script execution
+            try:
+                # Handle file uploads directly without form validation
+                if "template_file" in request.FILES:
+                    if workflow.template_file:
+                        workflow.template_file.delete(save=False)
+                    workflow.template_file = request.FILES["template_file"]
+                    logger.info(f"Template file being uploaded: {request.FILES['template_file'].name}")
 
-            workflow.save()
-            logger.info(
-                f"Workflow saved. Script file path: {workflow.script_file.path if workflow.script_file else 'None'}"
-            )
-            messages.success(request, "Files uploaded successfully.")
+                if "data_file" in request.FILES:
+                    if workflow.data_file:
+                        workflow.data_file.delete(save=False)
+                    workflow.data_file = request.FILES["data_file"]
+                    logger.info(f"Data file being uploaded: {request.FILES['data_file'].name}")
 
-        except Exception as e:
-            logger.error(f"Error saving files: {str(e)}")
-            messages.error(request, f"Error saving files: {str(e)}")
+                workflow.save()
+
+                if "template_file" in request.FILES or "data_file" in request.FILES:
+                    messages.success(request, "Files uploaded successfully.")
+
+                # Run script if all files are present and no new files were just uploaded
+                if (
+                    workflow.template_file
+                    and workflow.data_file
+                    and workflow.script_file
+                    and "template_file" not in request.FILES
+                    and "data_file" not in request.FILES
+                ):
+                    try:
+                        # Load the script dynamically
+                        spec = importlib.util.spec_from_file_location("workflow_script", workflow.script_file.path)
+                        module = importlib.util.module_from_spec(spec)
+                        sys.modules["workflow_script"] = module
+                        spec.loader.exec_module(module)
+
+                        # Run the process function
+                        result = module.process(
+                            template_file=workflow.template_file.path, data_file=workflow.data_file.path
+                        )
+
+                        # Store the result path if it was successful
+                        if result and "Output saved to:" in result:
+                            output_path = result.split("Output saved to:")[1].strip()
+                            workflow.latest_output_file = output_path
+                            workflow.save()
+
+                        logger.info(f"Workflow execution result: {result}")
+                        messages.success(request, "Script executed successfully.")
+
+                    except Exception as e:
+                        logger.error(f"Error executing script: {str(e)}")
+                        messages.error(request, f"Error executing script: {str(e)}")
+
+            except Exception as e:
+                logger.error(f"Error processing files: {str(e)}")
+                messages.error(request, f"Error processing files: {str(e)}")
 
         return redirect(reverse("workflows:workflow_detail", kwargs={"pk": workflow.pk}))
 
@@ -90,72 +155,88 @@ class WorkflowUpdateView(UpdateView):
         return reverse_lazy("workflows:workflow_detail", kwargs={"pk": self.object.pk})
 
 
-def run_workflow(request, pk):
-    workflow = get_object_or_404(Workflow, pk=pk)
-
-    if request.method == "POST":
-        try:
-            # Load the script dynamically
-            spec = importlib.util.spec_from_file_location("workflow_script", workflow.script_file.path)
-            module = importlib.util.module_from_spec(spec)
-            sys.modules["workflow_script"] = module
-            spec.loader.exec_module(module)
-
-            # Run the process function from the uploaded script and store the result
-            result = module.process(template_file=workflow.template_file.path, data_file=workflow.data_file.path)
-
-            # Log the result for debugging
-            logger.info(f"Workflow execution result: {result}")
-
-            # You could store the result or pass it to the template via messages
-            if result:
-                messages.success(request, f"Workflow executed successfully. Result: {result}")
-            else:
-                messages.success(request, "Workflow executed successfully.")
-
-            return redirect(reverse("workflows:workflow_detail", kwargs={"pk": workflow.pk}))
-
-        except Exception as e:
-            messages.error(request, f"Error executing workflow: {str(e)}")
-            return redirect(reverse("workflows:workflow_detail", kwargs={"pk": workflow.pk}))
-
-    return HttpResponse(status=405)
-
-
 def validate_files(request, pk):
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
     try:
-        results = {
-            "all_valid": True,
-            "template": {"valid": True, "message": "Valid Excel template"},
-            "data": {"valid": True, "message": "Valid data file"},
-            "script": {"valid": True, "message": "Valid Python script"},
-        }
+        form_type = request.POST.get("form_type")
+
+        if form_type == "script":
+            form = ScriptUploadForm(request.POST, request.FILES)
+            results = {
+                "all_valid": form.is_valid(),
+                "script": {
+                    "valid": form.is_valid(),
+                    "message": "Valid Python script" if form.is_valid() else form.errors["script_file"][0],
+                },
+            }
+        else:
+            form = WorkflowForm(request.POST, request.FILES)
+            results = {
+                "all_valid": form.is_valid(),
+                "template": {
+                    "valid": "template_file" not in form.errors,
+                    "message": "Valid Excel template"
+                    if "template_file" not in form.errors
+                    else form.errors["template_file"][0],
+                },
+                "data": {
+                    "valid": "data_file" not in form.errors,
+                    "message": "Valid data file" if "data_file" not in form.errors else form.errors["data_file"][0],
+                },
+            }
+
         return JsonResponse(results)
     except Exception as e:
         logger.error(f"Error validating files: {str(e)}")
         return JsonResponse({"error": str(e)}, status=400)
 
 
-def upload_script(request, workflow_id):
-    workflow = get_object_or_404(Workflow, id=workflow_id)
-    if request.method == "POST" and request.FILES.get("script_file"):
-        script_file = request.FILES["script_file"]
-        # Validate file type if needed
-        if not script_file.name.endswith(".py"):
-            messages.error(request, "Please upload a Python file (.py)")
-            return redirect("workflow_detail", workflow_id=workflow_id)
-
-        workflow.save_script(script_file)
-        messages.success(request, "Script uploaded successfully")
-    return redirect("workflow_detail", workflow_id=workflow_id)
-
-
 def download_script(request, workflow_id):
     workflow = get_object_or_404(Workflow, id=workflow_id)
-    if workflow.script_file:
+    file_type = request.GET.get("type", "script")
+
+    if file_type == "output" and workflow.template_file:
+        try:
+            # Debug logging
+            logger.info(f"Starting download process for workflow {workflow_id}")
+            logger.info(f"Template file exists: {os.path.exists(workflow.template_file.path)}")
+            logger.info(f"Template file path: {workflow.template_file.path}")
+            logger.info(f"Template file name: {workflow.template_file.name}")
+
+            if not os.path.exists(workflow.template_file.path):
+                raise FileNotFoundError(f"Template file not found at {workflow.template_file.path}")
+
+            # Read file in binary mode
+            with open(workflow.template_file.path, "rb") as excel_file:
+                file_content = excel_file.read()
+
+            if not file_content:
+                raise ValueError("File content is empty")
+
+            response = HttpResponse(
+                file_content,
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+
+            # Create filename
+            base_name = os.path.splitext(os.path.basename(workflow.template_file.name))[0]
+            filename = f"{base_name}_{datetime.now().strftime('%Y%m%d')}.xlsx"
+
+            logger.info(f"Preparing download with filename: {filename}")
+
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
+            response["Content-Length"] = len(file_content)
+
+            return response
+
+        except Exception as e:
+            logger.error(f"Error downloading template file: {str(e)}", exc_info=True)
+            messages.error(request, f"Error downloading template file: {str(e)}")
+    elif workflow.script_file:
         return FileResponse(workflow.script_file.open(), as_attachment=True)
-    messages.error(request, "No script file found")
-    return redirect("workflow_detail", workflow_id=workflow_id)
+    else:
+        messages.error(request, "No file found")
+
+    return redirect("workflows:workflow_detail", pk=workflow_id)

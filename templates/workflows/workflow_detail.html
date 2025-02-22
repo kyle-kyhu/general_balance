@@ -15,9 +15,10 @@
                     
                     <!-- File Upload Section -->
                     <div class="mt-4 mb-4">
-                        <h4 class="mb-3">Upload Files</h4>
-                        <form method="post" enctype="multipart/form-data">
+                        <h4 class="mb-3">Upload Data Files</h4>
+                        <form method="post" enctype="multipart/form-data" id="workflow-form">
                             {% csrf_token %}
+                            <input type="hidden" name="form_type" value="workflow">
                             
                             <!-- Excel Template Upload -->
                             <div class="mb-3">
@@ -47,7 +48,43 @@
                             </div>
                             {% endif %}
 
-                            <!-- Python Script Upload -->
+                            <!-- Changed button text and added condition -->
+                            {% if workflow.template_file and workflow.data_file and workflow.script_file %}
+                                <button type="submit" class="btn btn-success">Run Script</button>
+                                
+                                <!-- Add download link section -->
+                                {% if workflow.latest_output_file %}
+                                <div class="mt-3">
+                                    <a href="{% url 'workflows:download_script' workflow.pk %}?type=output" 
+                                       class="btn btn-primary">
+                                        <i class="fas fa-download"></i> Download Latest Output
+                                    </a>
+                                    <small class="text-muted d-block mt-1">
+                                        Last generated: {{ workflow.latest_output_file|date:"M d, Y H:i" }}
+                                    </small>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <button type="submit" class="btn btn-primary">Upload Files</button>
+                                {% if not workflow.template_file or not workflow.data_file or not workflow.script_file %}
+                                    <small class="text-muted d-block mt-2">
+                                        Please upload all required files before running the script:
+                                        {% if not workflow.template_file %}<br>- Excel Template{% endif %}
+                                        {% if not workflow.data_file %}<br>- CSV Data File{% endif %}
+                                        {% if not workflow.script_file %}<br>- Python Script{% endif %}
+                                    </small>
+                                {% endif %}
+                            {% endif %}
+                        </form>
+                    </div>
+
+                    <!-- Script Upload Section -->
+                    <div class="mt-4 mb-4">
+                        <h4 class="mb-3">Python Script</h4>
+                        <form method="post" enctype="multipart/form-data" id="script-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_type" value="script">
+                            
                             <div class="mb-3">
                                 <label class="form-label">Python Script</label>
                                 <input type="file" 
@@ -60,112 +97,26 @@
                                 {% endif %}
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Upload Files</button>
-                        </form>
-                        
-                        <!-- Validation Status Section -->
-                        <div id="validation-status" class="mt-3" style="display: none;">
-                            <div class="alert alert-info">
-                                <div class="d-flex align-items-center">
-                                    <div class="spinner-border spinner-border-sm me-2" role="status">
-                                        <span class="visually-hidden">Validating...</span>
-                                    </div>
-                                    <span>Validating files...</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Validation Results -->
-                        <div id="validation-results" class="mt-3" style="display: none;">
-                            <h5>Validation Results:</h5>
-                            <ul class="list-group">
-                                <li id="template-validation" class="list-group-item">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    Excel Template: <span class="validation-message"></span>
-                                </li>
-                                <li id="data-validation" class="list-group-item">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    Data File: <span class="validation-message"></span>
-                                </li>
-                                <li id="script-validation" class="list-group-item">
-                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                    Python Script: <span class="validation-message"></span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Uploaded Files Section -->
-                    <div class="mt-4 mb-4">
-                        <h4 class="mb-3">Uploaded Files</h4>
-                        <div class="list-group">
-                            {% if workflow.template_file %}
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-file-excel text-success me-2"></i>
-                                    Excel Template
-                                </div>
-                                <div>
-                                    <a href="{{ workflow.template_file.url }}" class="btn btn-sm btn-outline-primary" download>
-                                        <i class="fas fa-download"></i> Download
-                                    </a>
-                                </div>
-                            </div>
-                            {% endif %}
-
-                            {% if workflow.data_file %}
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-file-csv text-info me-2"></i>
-                                    Data File
-                                </div>
-                                <div>
-                                    <a href="{{ workflow.data_file.url }}" class="btn btn-sm btn-outline-primary" download>
-                                        <i class="fas fa-download"></i> Download
-                                    </a>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Run Workflow Section -->
-                    {% if workflow.template_file and workflow.data_file and workflow.script_file %}
-                    <div class="mt-3 mb-4">
-                        <form method="post" action="{% url 'workflows:run_workflow' workflow.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success">Run Workflow</button>
+                            <button type="submit" class="btn btn-primary">Upload Script</button>
                         </form>
                     </div>
-                    {% endif %}
+
+                    <!-- Validation Status Section -->
+                    <div id="validation-status" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm me-2" role="status">
+                                    <span class="visually-hidden">Validating...</span>
+                                </div>
+                                <span>Validating files...</span>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="mt-3">
                         <a href="{% url 'workflows:workflow_edit' workflow.pk %}" class="btn btn-primary">Edit</a>
                         <a href="{% url 'workflows:workflow_delete' workflow.pk %}" class="btn btn-danger">Delete</a>
                         <a href="{% url 'workflows:workflow_list' %}" class="btn btn-secondary">Back to List</a>
-                    </div>
-
-                    <div class="script-section">
-                        <h3>Python Script</h3>
-                        <h5>Steps</h5>
-                        <p>upload a py file and save it to the workflow</p>
-                        <p>run the workflow</p>
-                        
-                        <!-- Download Script Button -->
-                        {% if workflow.script_file %}
-                        <a href="{% url 'workflows:download_script' workflow.id %}" class="btn btn-primary">
-                            Download Script
-                        </a>
-                        {% endif %}
-
-                        <!-- Upload Script Form -->
-                        <form method="POST" enctype="multipart/form-data" action="{% url 'workflows:upload_script' workflow.id %}">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <input type="file" name="script_file" accept=".py" class="form-control">
-                            </div>
-                            <button type="submit" class="btn btn-success">Upload Script</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -176,65 +127,53 @@
 
 {% block extra_js %}
 <script>
-document.querySelector('form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    // Show validation status
-    document.getElementById('validation-status').style.display = 'block';
-    document.getElementById('validation-results').style.display = 'none';
-    
-    const formData = new FormData(this);
-    
-    try {
-        const response = await fetch("{% url 'workflows:validate_files' workflow.pk %}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Show validation status
+        document.getElementById('validation-status').style.display = 'block';
+        
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch("{% url 'workflows:validate_files' workflow.pk %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            });
+            
+            const results = await response.json();
+            
+            // Hide status spinner
+            document.getElementById('validation-status').style.display = 'none';
+            
+            // If validation passed, submit the form
+            if (results.all_valid) {
+                this.submit();
+            } else {
+                // Show error messages
+                let errorMessage = '';
+                if (results.template && !results.template.valid) {
+                    errorMessage += results.template.message + '\n';
+                }
+                if (results.data && !results.data.valid) {
+                    errorMessage += results.data.message + '\n';
+                }
+                if (results.script && !results.script.valid) {
+                    errorMessage += results.script.message;
+                }
+                alert(errorMessage);
             }
-        });
-        
-        const results = await response.json();
-        
-        // Hide status spinner
-        document.getElementById('validation-status').style.display = 'none';
-        
-        // Show results
-        document.getElementById('validation-results').style.display = 'block';
-        
-        // Update validation messages
-        updateValidationItem('template-validation', results.template);
-        updateValidationItem('data-validation', results.data);
-        updateValidationItem('script-validation', results.script);
-        
-        // If all validations passed, submit the form
-        if (results.all_valid) {
-            this.submit();
+            
+        } catch (error) {
+            console.error('Validation error:', error);
+            document.getElementById('validation-status').innerHTML = 
+                '<div class="alert alert-danger">Error validating files. Please try again.</div>';
         }
-        
-    } catch (error) {
-        console.error('Validation error:', error);
-        document.getElementById('validation-status').innerHTML = 
-            '<div class="alert alert-danger">Error validating files. Please try again.</div>';
-    }
+    });
 });
-
-function updateValidationItem(elementId, result) {
-    const element = document.getElementById(elementId);
-    const icon = element.querySelector('i');
-    const message = element.querySelector('.validation-message');
-    
-    if (result.valid) {
-        icon.className = 'fas fa-check-circle text-success me-2';
-        element.classList.remove('list-group-item-danger');
-        element.classList.add('list-group-item-success');
-    } else {
-        icon.className = 'fas fa-times-circle text-danger me-2';
-        element.classList.remove('list-group-item-success');
-        element.classList.add('list-group-item-danger');
-    }
-    
-    message.textContent = result.message;
-}
 </script>
 {% endblock %}

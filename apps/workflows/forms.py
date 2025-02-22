@@ -16,31 +16,26 @@ class WorkflowForm(forms.ModelForm):
     )
 
     template_file = forms.FileField(
-        required=False, widget=forms.FileInput(attrs={"class": "form-control", "accept": ".xlsx,.xls"})
+        required=False,
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "accept": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            }
+        ),
     )
 
     data_file = forms.FileField(
-        required=False, widget=forms.FileInput(attrs={"class": "form-control", "accept": ".csv"})
-    )
-
-    script_file = forms.FileField(
-        required=False, widget=forms.FileInput(attrs={"class": "form-control", "accept": ".py"})
+        required=False,
+        widget=forms.FileInput(attrs={"class": "form-control", "accept": ".csv"}),
     )
 
     class Meta:
         model = Workflow
-        fields = ["name", "description", "data_source", "template_file", "data_file", "script_file"]
+        fields = ["name", "description", "data_source", "template_file", "data_file"]
         widgets = {
-            "name": forms.TextInput(
-                attrs={"class": "input input-bordered w-full", "placeholder": "Enter workflow name"}
-            ),
-            "description": forms.Textarea(
-                attrs={
-                    "class": "textarea textarea-bordered w-full",
-                    "rows": 4,
-                    "placeholder": "Enter workflow description",
-                }
-            ),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
         }
 
     def clean_name(self):
@@ -49,21 +44,33 @@ class WorkflowForm(forms.ModelForm):
             raise forms.ValidationError("Name must be at least 3 characters long")
         return name
 
-    def clean_script_file(self):
-        script_file = self.cleaned_data.get("script_file")
-        if script_file and not script_file.name.endswith(".py"):
-            raise forms.ValidationError("Only Python (.py) files are allowed")
-        return script_file
-
     def clean_template_file(self):
-        template_file = self.cleaned_data.get("template_file")
-        if template_file and not template_file.name.endswith((".xlsx", ".xls")):
-            raise forms.ValidationError("Only Excel files (.xlsx, .xls) are allowed")
-        return template_file
+        file = self.cleaned_data.get("template_file")
+        if file:
+            if not file.name.lower().endswith(".xlsx"):
+                raise forms.ValidationError("Only Excel (.xlsx) files are allowed.")
+            content_type = file.content_type
+            if content_type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                raise forms.ValidationError("Invalid Excel file format. Please use .xlsx format.")
+        return file
 
     def clean_data_file(self):
-        data_file = self.cleaned_data.get("data_file")
-        data_source = self.cleaned_data.get("data_source")
-        if data_source == "csv" and data_file and not data_file.name.endswith(".csv"):
-            raise forms.ValidationError("Only CSV files are allowed")
-        return data_file
+        file = self.cleaned_data.get("data_file")
+        if file:
+            if not file.name.endswith(".csv"):
+                raise forms.ValidationError("Only CSV files are allowed.")
+        return file
+
+
+class ScriptUploadForm(forms.Form):
+    script_file = forms.FileField(
+        widget=forms.FileInput(attrs={"class": "form-control", "accept": ".py"}),
+        label="Python Script",
+    )
+
+    def clean_script_file(self):
+        file = self.cleaned_data.get("script_file")
+        if file:
+            if not file.name.endswith(".py"):
+                raise forms.ValidationError("Only Python (.py) files are allowed.")
+        return file
